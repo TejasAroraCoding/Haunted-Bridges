@@ -3,7 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Haunted Bridges — Deluxe Edition v7</title>
+<title>Haunted Bridges</title>
+<meta name="description" content="Haunted Bridges — a roguelite arcane survival game. Collect every coin, cross six cursed bridges and defeat Malakor.">
+<meta name="theme-color" content="#05040a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Haunted Bridges">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=JetBrains+Mono:wght@500;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -246,10 +255,11 @@
   .serif-title, .font-display { font-family:'Chakra Petch', sans-serif; letter-spacing:0.06em; text-transform:uppercase; }
   .mono-font, .font-mono-tech { font-family:'JetBrains Mono', monospace; }
   #app-wrap { position:relative; width:100vw; height:100vh; height:100dvh; display:flex; align-items:center; justify-content:center;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     background:radial-gradient(circle at center,#110d24 0%,#040308 100%); }
-  #game-stage { position:relative; width:100%; height:100%; max-width:177.78vh; max-height:56.25vw; aspect-ratio:16/9;
+  /* The stage is sized by JS to an exact 16:9 box that always fits the screen (letterboxed) */
+  #game-stage { position:relative; width:960px; height:540px; flex:0 0 auto;
     box-shadow:0 0 60px rgba(0,0,0,.95),0 0 25px rgba(138,106,204,.18); overflow:hidden; background:#000; }
-  @media (max-aspect-ratio:16/10) { #game-stage { max-width:100vw; max-height:100dvh; aspect-ratio:auto; } }
   canvas#c { width:100%; height:100%; display:block; cursor:none; }
   .ui-layer { position:absolute; inset:0; pointer-events:none; display:flex; flex-direction:column; justify-content:space-between; z-index:20; }
   .interactive { pointer-events:auto; }
@@ -274,7 +284,44 @@
   .custom-scroll::-webkit-scrollbar-thumb { background:rgba(255,204,102,.4); border-radius:3px; }
   #touch-layer { position:absolute; inset:0; pointer-events:none; z-index:15; }
   .touch-zone { pointer-events:auto; touch-action:none; }
-  #ui-root { padding-top:56px !important; }
+  #ui-root { padding-top:56px !important; inset:auto !important; left:0 !important; top:0 !important; transform-origin:0 0; }
+  /* Compact layout for short landscape phones */
+  body.compact #ui-root { padding-top:46px !important; padding-bottom:4px !important; }
+  body.compact #menu-main { padding-top:2px; padding-bottom:2px; }
+  body.compact #menu-main h1 { font-size:42px; line-height:1.05; }
+  body.compact .hub-hint, body.compact #diff-desc, body.compact .hub-tagline { display:none !important; }
+  body.compact .obj-strip { margin-bottom:8px; }
+  body.compact #hero-card-hub { margin-bottom:8px; padding:6px 10px; }
+  body.compact .diff-picker { margin-bottom:8px; }
+  #rotate-hint { position:fixed; inset:0; z-index:200; display:none; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    background:radial-gradient(circle,#140e2a,#040308); color:#e2e8f0; text-align:center; font-family:'Rajdhani',sans-serif; }
+  #rotate-hint .rot-icon { font-size:54px; animation:rotHint 2s ease-in-out infinite; color:#7df9ff; }
+  #rotate-hint b { font-family:'Chakra Petch',sans-serif; letter-spacing:.12em; font-size:20px; color:#fde68a; }
+  @keyframes rotHint { 0%,20% { transform:rotate(0); } 60%,100% { transform:rotate(-90deg); } }
+  @media (orientation:portrait) and (pointer:coarse) { #rotate-hint { display:flex; } }
+  #toast { position:absolute; left:50%; top:52px; transform:translate(-50%,-8px); z-index:60; pointer-events:none; opacity:0;
+    transition:opacity .25s ease, transform .25s ease; font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:13px; letter-spacing:.06em;
+    color:#fde68a; background:rgba(10,7,22,.94); border:1px solid rgba(253,224,71,.45); border-radius:999px; padding:6px 14px; white-space:nowrap; }
+  #toast.on { opacity:1; transform:translate(-50%,0); }
+  /* On short screens, keep only a compact pause button over the HUD during a run */
+  body.compact.in-run #btn-mute-quick, body.compact.in-run #btn-fs-quick, body.compact.in-run #btn-install { display:none !important; }
+  body.compact.in-run .pause-lbl { display:none; }
+  body.compact.in-run #btn-pause-quick { padding:6px 12px; font-size:15px; }
+  .pause-tools { display:none; gap:8px; }
+  #modal-status { max-height:96%; overflow-y:auto; }
+  body.compact #modal-status { padding:10px 16px !important; }
+  body.compact #modal-status h2 { font-size:28px; line-height:1.1; margin-bottom:2px; }
+  body.compact #status-desc { margin-bottom:8px; }
+  body.compact #modal-status > .grid { margin-bottom:10px; padding:6px; }
+  body.compact #modal-status button { padding-top:6px; padding-bottom:6px; }
+  body.compact #modal-status .flex-col { gap:6px; }
+  body.compact .pause-tools { display:grid; grid-template-columns:1fr 1fr; }
+  .warp-row { display:none; align-items:center; justify-content:center; gap:5px; margin-top:8px; flex-wrap:wrap; }
+  body.cheats .warp-row { display:flex; }
+  .warp-row span { font-family:'JetBrains Mono',monospace; font-size:10px; color:#fb7185; letter-spacing:.15em; font-weight:800; }
+  .warp-row button { font-family:'Chakra Petch',sans-serif; font-weight:700; font-size:12px; width:30px; height:26px; border-radius:8px;
+    border:1px solid rgba(251,113,133,.5); background:rgba(40,8,20,.85); color:#fecdd3; cursor:pointer; }
+  .warp-row button:hover { background:rgba(120,20,50,.9); color:#fff; }
   #top-quick-bar { z-index:40; }
 
   /* Objective strip on the main hub */
@@ -363,6 +410,7 @@
 </head>
 <body>
 
+<div id="rotate-hint"><div class="rot-icon">📱</div><b>ROTATE YOUR DEVICE</b><span>Haunted Bridges plays in landscape</span></div>
 <div id="app-wrap">
   <div id="game-stage">
     <canvas id="c" width="960" height="540"></canvas>
@@ -371,10 +419,12 @@
       <button id="btn-mute-quick" onclick="toggleMuteUI()" title="Toggle Audio (M)" class="btn-neo px-2.5 py-1 rounded-md text-xs font-bold opacity-85 hover:opacity-100">
         <span id="mute-icon">🔊</span>
       </button>
-      <button onclick="toggleFullscreen()" title="Fullscreen" class="btn-neo px-2.5 py-1 rounded-md text-xs font-bold opacity-85 hover:opacity-100">⛶</button>
-      <button id="btn-pause-quick" onclick="togglePauseUI()" title="Pause Game (P)" class="btn-neo px-3 py-1 rounded-md text-xs font-bold hidden opacity-90 hover:opacity-100">⏸ PAUSE</button>
+      <button id="btn-fs-quick" onclick="toggleFullscreen()" title="Fullscreen" class="btn-neo px-2.5 py-1 rounded-md text-xs font-bold opacity-85 hover:opacity-100">⛶</button>
+      <button id="btn-install" onclick="installApp()" title="Install as an app" class="btn-neo px-2.5 py-1 rounded-md text-xs font-bold hidden opacity-90 hover:opacity-100">⬇ INSTALL</button>
+      <button id="btn-pause-quick" onclick="togglePauseUI()" title="Pause Game (P)" class="btn-neo px-3 py-1 rounded-md text-xs font-bold hidden opacity-90 hover:opacity-100">⏸<span class="pause-lbl"> PAUSE</span></button>
     </div>
 
+    <div id="toast"></div>
     <div id="touch-layer" class="hidden">
       <div id="zone-left" class="touch-zone absolute bottom-2 left-2 w-44 h-44 sm:w-52 sm:h-52"></div>
       <div id="zone-right" class="touch-zone absolute bottom-2 right-2 w-44 h-44 sm:w-52 sm:h-52"></div>
@@ -391,11 +441,11 @@
         <div class="w-full flex items-center justify-between px-2">
           <div class="neo-panel px-3.5 py-1.5 rounded-lg flex items-center gap-2 text-xs sm:text-sm">
             <span class="text-cyan-400 font-display font-bold">BEST RUN:</span>
-            <span id="ui-highscore" class="font-mono-tech font-bold text-amber-400">0</span>
+            <span id="ui-highscore" class="font-mono-tech font-bold text-amber-400" onclick="cheatTap()">0</span>
           </div>
           <div class="neo-panel px-3.5 py-1.5 rounded-lg text-xs text-slate-300 hidden sm:flex items-center gap-2 font-mono-tech">
             <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-            <span>BUILD 3.0 // ROGUELITE COMBAT ENGINE</span>
+            <span>BUILD 4.0 // ROGUELITE COMBAT ENGINE</span>
           </div>
         </div>
 
@@ -404,10 +454,10 @@
             <span>TACTICAL ARCANE SURVIVAL</span>
           </div>
           <h1 class="font-display text-4xl sm:text-6xl md:text-7xl font-bold italic tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-400 drop-shadow-[0_4px_28px_rgba(0,240,255,0.4)]">HAUNTED BRIDGES</h1>
-          <p class="text-xs sm:text-base text-slate-300 max-w-lg mt-1 mb-2 font-medium tracking-wide">Breach six cursed spans, evolve your arcane weaponry, and shatter the Abyssal Lord.</p>
+          <p class="hub-tagline text-xs sm:text-base text-slate-300 max-w-lg mt-1 mb-2 font-medium tracking-wide">Breach six cursed spans, evolve your arcane weaponry, and shatter the Abyssal Lord.</p>
           <div class="obj-strip">◆ OBJECTIVE — Collect <b>every coin</b> on each bridge to unlock the gate · Defeat <b>Malakor</b> on Stage 6</div>
 
-          <div onclick="openModal('modal-heroes')" class="neo-panel rounded-xl p-2.5 sm:p-3.5 mb-3.5 sm:mb-5 flex items-center gap-3.5 sm:gap-4 cursor-pointer hover:border-cyan-400 transition-all group">
+          <div id="hero-card-hub" onclick="openModal('modal-heroes')" class="neo-panel rounded-xl p-2.5 sm:p-3.5 mb-3.5 sm:mb-5 flex items-center gap-3.5 sm:gap-4 cursor-pointer hover:border-cyan-400 transition-all group">
             <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-slate-950 border border-cyan-500/40 flex items-center justify-center overflow-hidden shadow-inner">
               <canvas id="hero-mini-preview" width="72" height="72" class="w-14 h-14 sm:w-16 sm:h-16"></canvas>
             </div>
@@ -434,9 +484,10 @@
             <button onclick="openModal('modal-controls')" class="btn-neo px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5"><span>🎮</span><span>CONTROLS</span></button>
             <button onclick="openModal('modal-settings')" class="btn-neo px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5"><span>⚙</span><span>SETTINGS</span></button>
           </div>
+          <div class="warp-row"><span>WARP ▸</span><button onclick="cheatWarp(0)">1</button><button onclick="cheatWarp(1)">2</button><button onclick="cheatWarp(2)">3</button><button onclick="cheatWarp(3)">4</button><button onclick="cheatWarp(4)">5</button><button onclick="cheatWarp(5)">6</button></div>
         </div>
 
-        <div class="font-mono-tech text-[11px] sm:text-xs text-slate-400 text-center px-3">
+        <div class="hub-hint font-mono-tech text-[11px] sm:text-xs text-slate-400 text-center px-3">
           [PC] <span class="text-cyan-300">WASD/Arrows</span> Move · <span class="text-cyan-300">Click/Space</span> Fire · <span class="text-amber-300">Shift/R-Click</span> Phase Dash &nbsp;//&nbsp; [MOBILE] <span class="text-emerald-300">Twin Touch Sticks + Dash</span>
         </div>
       </div>
@@ -493,7 +544,7 @@
           </div>
           <div class="bg-slate-950/80 border rounded-xl p-3.5 md:col-span-2" style="border-color:rgba(251,191,36,.4)">
             <div class="font-display text-amber-300 font-bold mb-1.5">◆ MISSION OBJECTIVE</div>
-            <div class="text-xs text-slate-300"><strong class="text-amber-300">Stages 1–5:</strong> collect <span class="text-yellow-300 font-bold">ALL golden coins</span> on the bridge to unlock the gate on the right edge, then walk into the green portal. Coins are <span class="text-yellow-300 font-bold">magnetically pulled</span> to you when you get close (wider during Haste). <strong class="text-rose-400">Stage 6:</strong> defeat Malakor. Enemies are optional — but kills build your combo, and kills &amp; coins level up your weapon.</div>
+            <div class="text-xs text-slate-300"><strong class="text-amber-300">Stages 1–5:</strong> collect <span class="text-yellow-300 font-bold">ALL golden coins</span> on the bridge to unlock the gate on the right edge, then walk into the green portal. Coins are <span class="text-yellow-300 font-bold">magnetically pulled</span> to you when you get close — the range depends on difficulty and widens during Haste. <strong class="text-rose-400">Stage 6:</strong> defeat Malakor. Enemies are optional — but kills build your combo, and kills &amp; coins level up your weapon.</div>
           </div>
         <div class="bg-slate-950/80 border border-purple-500/30 rounded-xl p-3.5 md:col-span-2">
             <div class="font-display text-amber-300 font-bold mb-1.5">⚡ ENEMIES, TELEGRAPHS & RELICS</div>
@@ -529,8 +580,12 @@
             <button id="set-touch-btn" onclick="cycleTouchMode()" class="btn-neo px-4 py-1.5 rounded-lg font-bold text-cyan-300">AUTO</button>
           </div>
           <div class="flex items-center justify-between bg-slate-950/70 p-3 rounded-xl border border-slate-800">
-            <div><div class="font-display font-bold text-white">Graphics Quality</div><div class="text-xs text-slate-400">HIGH adds fog-of-war lighting, embers & extra particles</div></div>
-            <button id="set-gfx-btn" onclick="toggleGfxQuality()" class="btn-neo px-4 py-1.5 rounded-lg font-bold text-emerald-300">HIGH</button>
+            <div><div class="font-display font-bold text-white">Graphics Quality</div><div id="set-gfx-desc" class="text-xs text-slate-400">AUTO lowers resolution & effects if the frame rate drops</div></div>
+            <button id="set-gfx-btn" onclick="toggleGfxQuality()" class="btn-neo px-4 py-1.5 rounded-lg font-bold text-cyan-300">AUTO</button>
+          </div>
+          <div class="flex items-center justify-between bg-slate-950/70 p-3 rounded-xl border border-slate-800">
+            <div><div class="font-display font-bold text-white">Install as App</div><div id="set-install-desc" class="text-xs text-slate-400">Play full-screen and offline from your home screen</div></div>
+            <button id="set-install-btn" onclick="installApp()" class="btn-neo px-4 py-1.5 rounded-lg font-bold text-amber-300">INSTALL</button>
           </div>
           <div class="flex items-center justify-between bg-slate-950/70 p-3 rounded-xl border border-slate-800">
             <div><div class="font-display font-bold text-white">Combat Screen Shake</div><div class="text-xs text-slate-400">Camera recoil on explosions & hits</div></div>
@@ -596,7 +651,9 @@
             <button onclick="returnToTitleUI('modal-heroes')" class="btn-neo py-2 rounded-xl font-bold text-xs sm:text-sm">⚔ Switch Hero</button>
             <button onclick="openModalFromPause('modal-settings')" class="btn-neo py-2 rounded-xl font-bold text-xs sm:text-sm">⚙ Settings</button>
           </div>
+          <div class="pause-tools"><button onclick="toggleMuteUI()" class="btn-neo py-2 rounded-xl font-bold text-xs sm:text-sm">🔊 Sound On/Off</button><button onclick="toggleFullscreen()" class="btn-neo py-2 rounded-xl font-bold text-xs sm:text-sm">⛶ Fullscreen</button></div>
           <button onclick="returnToTitleUI()" class="btn-neo w-full py-2 rounded-xl font-bold text-xs text-slate-400">⌂ Return to Main Hub</button>
+          <div class="warp-row" style="margin-top:2px"><span>WARP ▸</span><button onclick="cheatWarp(0)">1</button><button onclick="cheatWarp(1)">2</button><button onclick="cheatWarp(2)">3</button><button onclick="cheatWarp(3)">4</button><button onclick="cheatWarp(4)">5</button><button onclick="cheatWarp(5)">6</button></div>
         </div>
       </div>
     </div>
@@ -634,12 +691,61 @@ function mk(w, h, s = 1) {
 }
 
 function setupHiDPI() {
-  DPR = Math.min(window.devicePixelRatio || 1, 2);
-  cv.width = W * DPR; cv.height = H * DPR;
+  // Render resolution follows the on-screen stage size, capped for phones and by the adaptive quality level
+  const stageEl = document.getElementById('game-stage');
+  const cssW = (stageEl && stageEl.getBoundingClientRect().width) || W;
+  const dev = window.devicePixelRatio || 1;
+  const cap = [isTouchDevice ? 1.5 : 2, 1.25, 1, 0.8][CFG.gfx === 'auto' ? perfLevel : CFG.gfx === 'perf' ? 2 : 0];
+  const res = clamp((cssW * Math.min(dev, cap)) / W, 0.5, 2.5);
+  const prev = DPR;
+  DPR = Math.round(res * 100) / 100;
+  if (cv.width !== Math.round(W * DPR)) { cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); }
   g.setTransform(DPR, 0, 0, DPR, 0, 0);
+  if (prev !== DPR && typeof bakeFloor === 'function' && scene !== 'title' && P) bakeFloor(S);
 }
-setupHiDPI();
-window.addEventListener('resize', setupHiDPI);
+/* ---------- Fit the 16:9 stage to any screen, and scale the HTML menus so they never overflow ---------- */
+let uiScale = 1;
+function fitUI(w, h) {
+  const ui = document.getElementById('ui-root'), hub = document.getElementById('menu-main');
+  if (!ui || !hub) return;
+  if (!hub.classList.contains('hidden')) {
+    let sc = 1;
+    for (let it = 0; it < 2; it++) {
+      ui.style.width = (w / sc) + 'px'; ui.style.height = (h / sc) + 'px'; ui.style.transform = 'none';
+      const prevH = hub.style.height;
+      hub.style.height = 'auto';
+      const cs = getComputedStyle(ui);
+      const need = hub.scrollHeight + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + 4;
+      hub.style.height = prevH;
+      sc = clamp((h / need) * (it ? sc : 1), 0.55, 1);
+      if (it === 0 && sc === 1) break;
+    }
+    uiScale = sc;
+  }
+  ui.style.width = (w / uiScale) + 'px';
+  ui.style.height = (h / uiScale) + 'px';
+  ui.style.transform = uiScale < 1 ? `scale(${uiScale})` : 'none';
+}
+function layoutStage() {
+  const wrap = document.getElementById('app-wrap'), stageEl = document.getElementById('game-stage');
+  const cs = getComputedStyle(wrap);
+  const aw = wrap.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const ah = wrap.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  let w = aw, h = aw * 9 / 16;
+  if (h > ah) { h = ah; w = ah * 16 / 9; }
+  w = Math.max(160, Math.floor(w)); h = Math.max(90, Math.floor(h));
+  stageEl.style.width = w + 'px'; stageEl.style.height = h + 'px';
+  document.body.classList.toggle('compact', h < 520);
+  fitUI(w, h);
+  setupHiDPI();
+  // Rotating a phone to portrait mid-run pauses the game
+  if (isTouchDevice && window.innerHeight > window.innerWidth && scene === 'play') togglePauseUI();
+}
+let layoutRAF = 0;
+const queueLayout = () => { cancelAnimationFrame(layoutRAF); layoutRAF = requestAnimationFrame(layoutStage); };
+window.addEventListener('resize', queueLayout);
+window.addEventListener('orientationchange', () => setTimeout(layoutStage, 250));
+if (window.visualViewport) window.visualViewport.addEventListener('resize', queueLayout);
 
 /* ---------- Pre-baked sprites ---------- */
 const DKB = mk(W, H, 0.5);                       // darkness mask (half-res)
@@ -685,16 +791,21 @@ function drawGlow(x, y, r, key = 'cyan', alpha = 0.75) {
 }
 
 /* ---------- Settings & persistence ---------- */
-const CFG = { gfx: 'high', shake: true, touchMode: 'auto', aimAssist: true, difficulty: 'normal' };
+const CFG = { gfx: 'auto', shake: true, touchMode: 'auto', aimAssist: true, difficulty: 'normal' };
 const DIFFS = {
-  easy:      { key: 'easy',      label: 'EASY',      color: '#6ee7b7', spd: 0.82, hp: 0.75, bul: 0.82, cd: 1.2,  lives: 4, score: 0.75, inv: 1.45,
-               desc: '4 lives · slower, weaker foes · ×0.75 score' },
-  normal:    { key: 'normal',    label: 'NORMAL',    color: '#7df9ff', spd: 1,    hp: 1,    bul: 1,    cd: 1,    lives: 3, score: 1,    inv: 1,
+  easy:      { key: 'easy',      label: 'EASY',      color: '#6ee7b7', spd: 0.82, hp: 0.75, bul: 0.82, cd: 1.2,  lives: 4, score: 0.75, inv: 1.45, mag: 78,
+               desc: '4 lives · weaker foes · big coin magnet · ×0.75 score' },
+  normal:    { key: 'normal',    label: 'NORMAL',    color: '#7df9ff', spd: 1,    hp: 1,    bul: 1,    cd: 1,    lives: 3, score: 1,    inv: 1,    mag: 56,
                desc: '3 lives · the intended challenge · ×1.0 score' },
-  nightmare: { key: 'nightmare', label: 'NIGHTMARE', color: '#fb7185', spd: 1.2,  hp: 1.35, bul: 1.15, cd: 0.82, lives: 2, score: 1.5,  inv: 0.85,
-               desc: '2 lives · faster, tougher foes · ×1.5 score' }
+  nightmare: { key: 'nightmare', label: 'NIGHTMARE', color: '#fb7185', spd: 1.2,  hp: 1.35, bul: 1.15, cd: 0.82, lives: 2, score: 1.5,  inv: 0.85, mag: 38,
+               desc: '2 lives · tougher foes · tiny coin magnet · ×1.5 score' }
 };
 let runDiff = 'normal';
+try { const sg = localStorage.getItem('hb_gfx'); if (['auto', 'high', 'perf'].includes(sg)) CFG.gfx = sg; } catch (e) {}
+/* Adaptive quality: 0 = full res + lighting, 1 = reduced res + lighting, 2 = no lighting, 3 = no lighting + lowest res */
+let perfLevel = 0;
+try { perfLevel = clamp(parseInt(localStorage.getItem('hb_perf') || '0', 10) || 0, 0, 3); } catch (e) {}
+const GFX_HIGH = () => CFG.gfx === 'high' || (CFG.gfx === 'auto' && perfLevel < 2);
 const DF = () => DIFFS[runDiff] || DIFFS.normal;
 try { const sd = localStorage.getItem('hb_diff'); if (DIFFS[sd]) CFG.difficulty = sd; } catch (e) {}
 let highScore = 0;
@@ -808,7 +919,9 @@ let gateLift = 0, gateAnimT = 0, coinShown = 0, hudHpPrev = 0, hudXhPrev = 0;
 let trauma = 0, kickX = 0, kickY = 0, kickVX = 0, kickVY = 0;
 let CFLY = [], COINPOP = [], HSHARD = [], CELLFX = [], CORPSES = [], BATS = [];
 let titleBolt = null, titleFlash = 0, titleNextBolt = 2.5;
-const GATE_DUR = 1.3;
+const GATE_DUR = 2.0;
+let gateRunes = 0, gateSeal = 1, gateStep = 0, gateFlare = 0, gateRumble = false;
+const easeOutBack = t => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
 
 /* ---------- Trauma-based camera shake with a directional spring kick ---------- */
 function addShake(amount, ang) {
@@ -1059,6 +1172,15 @@ addEventListener('keydown', e => {
   if (k === 'r' && (scene === 'play' || scene === 'pause' || scene === 'over' || scene === 'win')) startNewGameUI();
   if (k === 'm') toggleMuteUI();
   if (k === 'enter' && (scene === 'over' || scene === 'win')) startNewGameUI();
+  if (k.length === 1 && k >= 'a' && k <= 'z') {
+    cheatBuf = (cheatBuf + k).slice(-8);
+    if (cheatBuf.endsWith('warp')) { cheatBuf = ''; setCheats(!cheatOn); }
+  }
+  if (cheatOn && !e.repeat) {
+    if (k >= '1' && k <= '6' && k.length === 1) cheatWarp(+k - 1);
+    else if (k === ']' && scene !== 'title') cheatWarp(S + 1);
+    else if (k === '[' && scene !== 'title') cheatWarp(S - 1);
+  }
 });
 addEventListener('keyup', e => { K[e.key.toLowerCase()] = 0; });
 
@@ -1149,7 +1271,7 @@ function openModal(id) {
   MENU_IDS.forEach(m => setVisible(m, false));
   setVisible(id, true);
   if (id === 'modal-heroes') renderHeroCardsUI();
-  if (id === 'modal-settings' || id === 'menu-main') updateDiffUI();
+  if (id === 'modal-settings' || id === 'menu-main') { updateDiffUI(); updateGfxUI(); updateInstallUI(); }
 }
 function openModalFromPause(id) { pauseReturnStatus = true; openModal(id); }
 function closeModals() {
@@ -1159,7 +1281,7 @@ function closeModals() {
   pauseReturnStatus = false;
   if (scene === 'pause' && fromPause) { showStatusModal('pause'); return; }
   if ((scene === 'over' || scene === 'win') && lastEnd) { renderEndModal(); return; }
-  if (scene === 'title') { setVisible('menu-main', true); updateDiffUI(); }
+  if (scene === 'title') { setVisible('menu-main', true); updateDiffUI(); queueLayout(); }
 }
 function startNewGameUI() {
   au(); sfx(580, 0.25, 'triangle', 0.1, 300);
@@ -1174,7 +1296,7 @@ function showStatusModal(type) {
   const desc = document.getElementById('status-desc');
   const btnResume = document.getElementById('btn-status-resume');
   const finalScore = type === 'win' ? score + Math.max(0, lives) * 500 : score;
-  if (finalScore > highScore) {
+  if (finalScore > highScore && !runCheated) {
     highScore = finalScore;
     try { localStorage.setItem('hb_highscore', String(highScore)); } catch (e) {}
     document.getElementById('ui-highscore').textContent = highScore;
@@ -1240,14 +1362,14 @@ function finalizeRun(type) {
   const lifeEach = Math.round(500 * DF().score);
   const lifeBonus = type === 'win' ? Math.max(0, lives) * lifeEach : 0;
   const finalScore = score + lifeBonus;
-  if (finalScore > highScore) {
+  if (finalScore > highScore && !runCheated) {
     highScore = finalScore;
     try { localStorage.setItem('hb_highscore', String(highScore)); } catch (e) {}
     document.getElementById('ui-highscore').textContent = highScore;
   }
-  lastEnd = {
+  lastEnd = { cheated: runCheated,
     type, base: score, lifeBonus, lifeEach, diff: DF(), livesLeft: Math.max(0, lives), finalScore,
-    isBest: finalScore > runStartBest && finalScore > 0, best: highScore,
+    isBest: !runCheated && finalScore > runStartBest && finalScore > 0, best: highScore,
     stage: S, kills: runKills, coins: runCoins + (S < 5 ? CO.length - need : 0),
     combo: bestCombo, wlv, time: runTime, hero: selectedHeroIdx,
     rank: calcRank(finalScore, type), tip: END_TIPS[Math.floor(Math.random() * END_TIPS.length)]
@@ -1267,7 +1389,7 @@ function renderEndModal() {
   el.classList.toggle('lost', !win);
   el.style.setProperty('--end-c', win ? '#6ee7b7' : '#fb7185');
   el.style.setProperty('--end-glow', win ? 'rgba(110,231,183,.3)' : 'rgba(251,113,133,.28)');
-  $('end-badge').textContent = win ? 'ABYSSAL CURSE SHATTERED' : `FALLEN ON ${STG[r.stage].n}`;
+  $('end-badge').textContent = (win ? 'ABYSSAL CURSE SHATTERED' : `FALLEN ON ${STG[r.stage].n}`) + (r.cheated ? ' · WARP RUN' : '');
   $('end-title').textContent = win ? 'VICTORY' : 'GAME OVER';
   $('end-sub').textContent = win
     ? `Malakor is vanquished — all six Haunted Bridges are conquered by ${h.name}.`
@@ -1333,11 +1455,22 @@ function cycleTouchMode() {
   document.getElementById('set-touch-btn').textContent = CFG.touchMode.toUpperCase();
   updateTouchVisibility();
 }
+function updateGfxUI() {
+  const btn = document.getElementById('set-gfx-btn'), d = document.getElementById('set-gfx-desc');
+  const lab = { auto: 'AUTO', high: 'HIGH', perf: 'PERFORMANCE' }[CFG.gfx];
+  btn.textContent = lab;
+  btn.className = `btn-neo px-4 py-1.5 rounded-lg font-bold ${CFG.gfx === 'high' ? 'text-emerald-300' : CFG.gfx === 'perf' ? 'text-amber-300' : 'text-cyan-300'}`;
+  d.textContent = CFG.gfx === 'auto'
+    ? `Adapts to keep play smooth · currently ${['full quality', 'reduced resolution', 'no lighting', 'lowest'][perfLevel]}`
+    : CFG.gfx === 'high' ? 'Lighting, embers & full resolution always on' : 'No lighting, fewer particles, lower resolution';
+}
 function toggleGfxQuality() {
-  CFG.gfx = CFG.gfx === 'high' ? 'perf' : 'high';
-  const btn = document.getElementById('set-gfx-btn');
-  btn.textContent = CFG.gfx === 'high' ? 'HIGH' : 'PERFORMANCE';
-  btn.className = `btn-neo px-4 py-1.5 rounded-lg font-bold ${CFG.gfx === 'high' ? 'text-emerald-300' : 'text-amber-300'}`;
+  const order = ['auto', 'high', 'perf'];
+  CFG.gfx = order[(order.indexOf(CFG.gfx) + 1) % order.length];
+  if (CFG.gfx === 'auto') perfLevel = 0;
+  try { localStorage.setItem('hb_gfx', CFG.gfx); localStorage.setItem('hb_perf', String(perfLevel)); } catch (e) {}
+  updateGfxUI();
+  setupHiDPI();
 }
 function toggleShakeSetting() {
   CFG.shake = !CFG.shake;
@@ -1368,16 +1501,83 @@ function cycleDifficulty() {
   setDifficulty(ks[(ks.indexOf(CFG.difficulty) + 1) % ks.length]);
 }
 function toggleFullscreen() {
-  if (!document.fullscreenElement) document.documentElement.requestFullscreen?.().catch(() => {});
-  else document.exitFullscreen?.().catch(() => {});
+  if (!document.fullscreenElement) {
+    const pr = document.documentElement.requestFullscreen?.({ navigationUI: 'hide' });
+    pr?.then(() => screen.orientation?.lock?.('landscape').catch(() => {})).catch(() => {});
+  } else document.exitFullscreen?.().catch(() => {});
+}
+/* ---------- Toast ---------- */
+let toastTimer = 0;
+function toast(msg, ms = 2200) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), ms);
+}
+/* ---------- Cheat code: type WARP (or tap BEST RUN 5×) → 1–6 / [ ] jump between stages ---------- */
+let cheatBuf = '', cheatOn = false, runCheated = false, cheatTaps = [];
+function setCheats(on) {
+  cheatOn = on;
+  document.body.classList.toggle('cheats', on);
+  sfx(on ? 880 : 300, 0.25, 'triangle', 0.08, on ? 500 : -150);
+  toast(on ? '⚡ WARP CHEAT ON — press 1–6 or [ ] to change stage' : 'Warp cheat off', 2600);
+  queueLayout();
+}
+function cheatTap() {
+  const now = performance.now();
+  cheatTaps = cheatTaps.filter(t => now - t < 1500); cheatTaps.push(now);
+  if (cheatTaps.length >= 5) { cheatTaps = []; setCheats(!cheatOn); }
+}
+function cheatWarp(n) {
+  if (!cheatOn) return;
+  n = clamp(n, 0, 5);
+  au();
+  if (scene === 'title' || scene === 'over' || scene === 'win') startNewGameUI();
+  else if (scene === 'pause') resumeGameUI();
+  tun = 0;
+  load(n);
+  runCheated = true;
+  sfx(520, 0.4, 'triangle', 0.1, 520);
+  toast(`⚡ Warped to ${STG[n].n} — ${STG[n].s} (score won't count as best)`);
+}
+/* ---------- Install as app (PWA) ---------- */
+let deferredInstall = null;
+const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches || navigator.standalone === true;
+function updateInstallUI() {
+  const b = document.getElementById('btn-install'), sb = document.getElementById('set-install-btn'), d = document.getElementById('set-install-desc');
+  b.classList.toggle('hidden', !deferredInstall || isStandalone());
+  if (isStandalone()) { sb.textContent = 'INSTALLED'; sb.disabled = true; d.textContent = 'Running as an installed app'; }
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; updateInstallUI(); });
+window.addEventListener('appinstalled', () => { deferredInstall = null; updateInstallUI(); toast('Installed! Launch Haunted Bridges from your home screen'); });
+function installApp() {
+  au();
+  if (isStandalone()) { toast('Already installed'); return; }
+  if (deferredInstall) {
+    deferredInstall.prompt();
+    deferredInstall.userChoice.finally(() => { deferredInstall = null; updateInstallUI(); });
+  } else if (/iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+    toast('On iPhone/iPad: tap Share, then “Add to Home Screen”', 4200);
+  } else if (!location.protocol.startsWith('http')) {
+    toast('Host the game folder on an https site to install it', 3600);
+  } else {
+    toast('Use your browser menu → “Install app” or “Add to Home screen”', 3600);
+  }
+}
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
 }
 Object.assign(window, {
   toggleMuteUI, toggleFullscreen, togglePauseUI, openModal, openModalFromPause, closeModals,
   startNewGameUI, resumeGameUI, returnToTitleUI, cycleTouchMode, toggleGfxQuality,
-  toggleShakeSetting, toggleAimAssist, selectHero, setDifficulty, cycleDifficulty
+  toggleShakeSetting, toggleAimAssist, selectHero, setDifficulty, cycleDifficulty,
+  cheatWarp, cheatTap, installApp
 });
 renderHeroCardsUI();
 updateDiffUI();
+updateGfxUI();
+updateInstallUI();
+layoutStage();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => layoutStage());
 
 /* ============================================================================
    GAME FLOW, SPAWNING, STAGE LOADING
@@ -1388,7 +1588,7 @@ function newGame() {
   lives = DF().lives; score = 0; wxp = 0; wlv = 1; XH = h.xh;
   bossSeen = false;
   combo = 0; comboT = 0; bestCombo = 1; pendingOver = false;
-  runKills = 0; runCoins = 0; runTime = 0; runDeaths = 0; runStartBest = highScore; lastEnd = null;
+  runKills = 0; runCoins = 0; runTime = 0; runDeaths = 0; runStartBest = highScore; lastEnd = null; runCheated = false;
   load(0);
   scene = 'play';
 }
@@ -1409,6 +1609,7 @@ function load(n) {
   PA = []; boss = null; FT = []; SOULS = [];
   CFLY = []; COINPOP = []; HSHARD = []; CELLFX = []; CORPSES = []; BATS = [];
   gateLift = 0; gateAnimT = 0; coinShown = 0;
+  gateRunes = 0; gateSeal = 1; gateStep = 0; gateFlare = 0; gateRumble = false;
   bakeFloor(n);
 
   P = {
@@ -1507,11 +1708,11 @@ function popText(x, y, s, c = '#fff', sz = 15, big = false) {
   FT.push({ x: x + R(-8, 8), y, vx: R(-24, 24), vy: big ? -R(50, 70) : -R(70, 100), t: life, m: life, s, c, sz, big });
 }
 function pt(x, y, vx, vy, l, c, r = 2, k = 0, gr = 0) {
-  if (PA.length >= (CFG.gfx === 'high' ? 320 : 150)) return;
+  if (PA.length >= (GFX_HIGH() ? 320 : 150)) return;
   PA.push({ x, y, vx, vy, l, m: l, c, r, k, gr });
 }
 function burst(x, y, n, c, sp = 190) {
-  const cnt = CFG.gfx === 'high' ? n : Math.ceil(n * 0.5);
+  const cnt = GFX_HIGH() ? n : Math.ceil(n * 0.5);
   for (let i = 0; i < cnt; i++) {
     const a = R(0, 6.283), s = R(30, sp);
     pt(x, y, Math.cos(a) * s, Math.sin(a) * s, R(0.25, 0.65), c, R(1.6, 3.4), 0, 120);
@@ -1555,7 +1756,7 @@ function addCombo(ptsBase, isHit = true) {
 /* ============================================================================
    HERO RENDERING (vector silhouette with idle breathing, cloak & scarf physics)
    ============================================================================ */
-function drawHeroModel(ctx, x, y, t, heroIdx, aimA, vx = 0, vy = 0, scale = 1.5, isMain = false) {
+function drawHeroModel(ctx, x, y, t, heroIdx, aimA, vx = 0, vy = 0, scale = 1.5, isMain = false, wind = 0) {
   const h = HEROES[heroIdx] || HEROES[0];
   const fl = Math.cos(aimA) < 0 ? -1 : 1;
   const mv = Math.hypot(vx, vy) > 20;
@@ -1563,7 +1764,7 @@ function drawHeroModel(ctx, x, y, t, heroIdx, aimA, vx = 0, vy = 0, scale = 1.5,
   const bob = (mv ? Math.abs(Math.sin(t)) * 2.2 : 0) + breath;
   const sw = mv ? Math.sin(t) * 6.5 : 0;
   const lean = clamp(vx / 1800, -0.12, 0.12);
-  const tr = clamp(-vx / 24, -9, 9);
+  const tr = clamp(-vx / 24 + wind, -9, 9);
   const w = Math.sin(RT * 7.5);
   const idleSway = mv ? 0 : Math.sin(RT * 2.2) * 1.2;
 
@@ -2306,7 +2507,7 @@ function step(dt) {
   }
   compact(PU, p => !p.got);
 
-  const magR = P.speedT > 0 ? 150 : 100;
+  const magR = DF().mag * (P.speedT > 0 ? 1.5 : 1);
   for (const c of CO) {
     if (c.got) continue;
     const cdist = D(P.x, P.y + 4, c.x, c.y);
@@ -2332,9 +2533,7 @@ function step(dt) {
         addShockwave(sw.x + 20, H / 2, 120, '#55ff99', 0.5);
         glowPuff(sw.x + 20, H / 2, 'green', 60, 0.6);
         gateAnimT = GATE_DUR;
-        sfx(46, 1.35, 'sawtooth', 0.13, 18);
-        sfx(72, 1.2, 'square', 0.035, -24);
-        addShake(0.22);
+        sfx(300, 0.14, 'square', 0.06, -160);      // the lock clacks
       }
     }
   }
@@ -2411,15 +2610,49 @@ function wallPush(o, r) {
    ============================================================================ */
 function renderUpdate(dt) {
   // Gate portcullis rising with dust and debris
+  // Gate sequence: runes ignite → seal shatters → portcullis winches up in four clanking heaves → portal bursts open
   if (gateAnimT > 0) {
     gateAnimT = Math.max(0, gateAnimT - dt);
     const k = 1 - gateAnimT / GATE_DUR;
-    gateLift = clamp(1 - Math.pow(1 - k, 2.2) + Math.sin(k * 42) * 0.012 * (1 - k), 0, 1);
-    if (gateAnimT === 0) gateLift = 1;
-    if (Math.random() < dt * 70) pt(W - 60 + R(4, 60), H / 2 + 70 - R(0, 6), R(-60, 60), -R(10, 70), R(0.5, 1.1), Math.random() < 0.5 ? '#7d7590' : '#4a4458', R(2, 4), 0, 60);
-    if (Math.random() < dt * 22) glowPuff(W - 60 + R(0, 60), H / 2 + 68, 'white', R(12, 22), 0.6);
-    if (Math.random() < dt * 16) pt(W - 60 + R(0, 60), H / 2 - 70, R(-20, 20), R(20, 60), R(0.5, 0.9), '#2e2a3e', R(2, 3), 0, 420);
+    const gx = W - 60, gy = H / 2 - 72;
+    const uk = clamp(k / 0.25, 0, 1);
+    const runes = Math.min(6, Math.floor(uk * 6.999));
+    if (runes > gateRunes) { gateRunes = runes; sfx(560 + runes * 110, 0.1, 'triangle', 0.06, 180); }
+    if (uk >= 1 && gateSeal > 0) {
+      gateSeal = 0;
+      burst(gx + 34, H / 2, 20, '#7df9ff', 220);
+      for (let i = 0; i < 10; i++) pt(gx + 34, H / 2, R(-160, 60), R(-120, 120), R(0.4, 0.8), '#c4b5fd', R(2, 3.5), 0, 300);
+      addShockwave(gx + 34, H / 2, 54, '#7df9ff', 0.3);
+      sfx(1100, 0.22, 'square', 0.05, -800); sfx(240, 0.22, 'sawtooth', 0.07, -140);
+      addShake(0.12);
+    }
+    const lk = clamp((k - 0.28) / 0.64, 0, 1), n = 4;
+    if (lk > 0 && !gateRumble) { gateRumble = true; sfx(44, 1.4, 'sawtooth', 0.1, 16); }
+    const u = lk * n, i = Math.min(n - 1, Math.floor(u)), f = lk >= 1 ? 1 : u - i;
+    const st = f < 0.62 ? easeOutBack(f / 0.62) : 1;
+    gateLift = lk >= 1 ? 1 : clamp((i + st) / n, 0, 1.03);
+    const done = lk >= 1 ? n : i + (f >= 0.62 ? 1 : 0);
+    if (done > gateStep) {
+      gateStep = done;
+      sfx(120, 0.16, 'square', 0.09, -60); sfx(58, 0.3, 'sawtooth', 0.08, -12);
+      addShake(0.16, Math.PI / 2);
+      for (let j = 0; j < 12; j++) pt(gx + R(4, 60), gy + 144 - R(0, 6), R(-90, 50), -R(20, 90), R(0.5, 1.1), j % 2 ? '#7d7590' : '#4a4458', R(2, 4), 0, 80);
+      for (let j = 0; j < 3; j++) glowPuff(gx + R(0, 60), gy + 140, 'white', R(14, 24), 0.6);
+      for (let j = 0; j < 4; j++) pt(gx + R(0, 60), gy - 4, R(-20, 20), R(20, 60), R(0.5, 0.9), '#2e2a3e', R(2, 3), 0, 420);
+      if (done === n) {
+        gateFlare = 1;
+        addShockwave(gx + 30, H / 2, 150, '#55ff99', 0.55);
+        burst(gx + 30, H / 2, 28, '#8fffb0', 260);
+        glowPuff(gx + 30, H / 2, 'green', 70, 0.7);
+        if (AC && !mute) { const now = AC.currentTime; [392, 523, 659, 784].forEach((fq, q) => tone(fq, now + q * 0.07, 0.5, 'triangle', 0.06)); }
+      }
+    }
+    if (lk > 0 && lk < 1 && f < 0.62) {
+      if (Math.random() < dt * 14) sfx(1700 + R(0, 500), 0.03, 'square', 0.012);          // chain rattle
+      if (Math.random() < dt * 40) pt(gx + R(4, 60), gy + 140, R(-50, 50), -R(10, 50), R(0.4, 0.8), '#5d566e', R(1.5, 3), 0, 60);
+    }
   }
+  if (gateFlare > 0) gateFlare = Math.max(0, gateFlare - dt * 1.1);
   // Coins arcing into the HUD counter
   for (const f of CFLY) {
     f.t += dt;
@@ -2484,6 +2717,20 @@ function renderUpdate(dt) {
       if (AC && !mute) tone(44, AC.currentTime + 0.15, 1.6, 'sawtooth', 0.05, -12);
     }
   }
+  if (scene === 'title') {
+    for (const c of TCLOUD) { c.x += c.v * dt; if (c.x > W + 60) { c.x = -330 * c.s; c.y = R(24, 190); } }
+    titleBatT -= dt;
+    if (titleBatT <= 0) {
+      titleBatT = R(7, 12);
+      const y0 = R(150, 250), dir = Math.random() < 0.5 ? 1 : -1, cnt = 6 + Math.floor(R(0, 5));
+      for (let i = 0; i < cnt; i++) TBATS.push({ x: dir > 0 ? -30 - R(0, 140) : W + 30 + R(0, 140), y: y0 + R(-28, 28), vx: dir * R(120, 175), vy: R(-8, 8), t: 0, m: 1e9, ph: R(0, 6), s: R(0.9, 1.5), al: 0.9 });
+    }
+    for (const b of TBATS) { b.t += dt; b.x += b.vx * dt; b.y += (Math.sin(b.t * 3 + b.ph) * 30 + b.vy) * dt; }
+    compact(TBATS, b => b.x > -260 && b.x < W + 260);
+    titleStarT -= dt;
+    if (titleStarT <= 0) { titleStarT = R(3, 7); TSTAR = { x: R(80, W - 260), y: R(16, 110), vx: R(380, 520), vy: R(110, 190), t: 0.7, m: 0.7 }; }
+    if (TSTAR) { TSTAR.t -= dt; TSTAR.x += TSTAR.vx * dt; TSTAR.y += TSTAR.vy * dt; if (TSTAR.t <= 0) TSTAR = null; }
+  }
   if (titleFlash > 0) titleFlash = Math.max(0, titleFlash - dt * 2.4);
   if (titleBolt) { titleBolt.t -= dt; if (titleBolt.t <= 0) titleBolt = null; }
 
@@ -2515,7 +2762,7 @@ function renderUpdate(dt) {
   for (const gh of GH) gh.t -= dt;
   compact(GH, gh => gh.t > 0);
   for (const s of SOULS) s.t += dt;
-  SOULS = SOULS.filter(s => s.t < s.dur);
+  compact(SOULS, s => s.t < s.dur);
   if (hudCoinFlash > 0) hudCoinFlash -= dt;
   if (hudScoreFlash > 0) hudScoreFlash -= dt;
   for (const z of PU) z.a += dt * 3;
@@ -3251,7 +3498,7 @@ function drawBoard() {
   for (const s of SOULS) drawSoul(s);
 
   // Dark lighting mask (HIGH only)
-  if (CFG.gfx === 'high') {
+  if (GFX_HIGH()) {
     const dg = DKB.x;
     dg.setTransform(0.5, 0, 0, 0.5, 0, 0);
     dg.globalCompositeOperation = 'source-over';
@@ -3272,19 +3519,20 @@ function drawBoard() {
     if (S < 5) L(sw.x + 20, H / 2, 105, 0.85);
     dg.globalAlpha = 1;
     dg.globalCompositeOperation = 'source-over';
+    dg.drawImage(VIG.c, 0, 0, W, H);          // vignette baked into the mask: one less full-screen pass
     g.drawImage(DKB.c, 0, 0, W, H);
     lightPass();
   }
 
   // Ambient embers (glow above lighting)
-  if (CFG.gfx === 'high') {
+  if (GFX_HIGH()) {
     for (const e of EMB) {
       const tw = 0.6 + 0.4 * Math.sin(e.p * 5);
       drawGlow(e.x, e.y, e.r * 3.5, e.c === '#ffe08a' ? 'gold' : 'orange', 0.5 * tw);
     }
   }
 
-  g.drawImage(VIG.c, 0, 0, W, H);
+  if (!GFX_HIGH()) g.drawImage(VIG.c, 0, 0, W, H);
 
   // Directional hit indicators: an arc around the hero + a glow on the screen edge facing the attacker
   for (const hd of HITDIR) {
@@ -3398,13 +3646,13 @@ function drawCorpses() {
     g.globalAlpha = pa;
   }
 }
-function drawBats() {
-  for (const b of BATS) {
+function drawBats(list = BATS) {
+  for (const b of list) {
     const k = b.t / b.m, a = k < 0.6 ? 1 : 1 - (k - 0.6) / 0.4;
     const flap = Math.sin(b.ph + b.t * 32) * 7;
     const pa = g.globalAlpha;
     g.save();
-    g.globalAlpha = pa * clamp(a, 0, 1);
+    g.globalAlpha = pa * clamp(a, 0, 1) * (b.al || 1);
     g.translate(b.x, b.y); g.scale(b.s * (b.vx < 0 ? -1 : 1), b.s);
     g.fillStyle = '#1a0612'; g.strokeStyle = 'rgba(255,42,85,0.55)'; g.lineWidth = 0.8;
     g.beginPath();
@@ -3426,7 +3674,7 @@ function lightPass() {
   drawGlow(P.x, P.y + 12, 110, HEROES[selectedHeroIdx].glowKey, 0.1);
   for (const b of PB) drawGlow(b.x, b.y, b.hero === 3 ? 70 : 42, b.gKey || 'cyan', b.hero === 3 ? 0.34 : 0.18);
   for (const b of EB) drawGlow(b.x, b.y, 36, b.gKey || 'purple', 0.14);
-  if (S < 5) drawGlow(sw.x + 20, H / 2, 150 + gateLift * 50, gateLift > 0.02 ? 'green' : 'red', 0.08 + gateLift * 0.24);
+  if (S < 5) drawGlow(sw.x + 20, H / 2, 150 + gateLift * 50 + gateFlare * 120, gateLift > 0.02 ? 'green' : 'red', 0.08 + gateLift * 0.24 + gateFlare * 0.3);
   for (const pu of PU) if (!pu.got) drawGlow(pu.x, pu.y, 60, pu.kind === 'rapid' ? 'gold' : pu.kind === 'shield' ? 'cyan' : 'green', 0.15);
   for (const hi of HRT) if (!hi.got) drawGlow(hi.x, hi.y, 56, 'red', 0.15);
   for (const m of MIST) drawGlow(m.x, m.y, m.r * 2.4, 'red', 0.12 * Math.min(1, m.t / m.m));
@@ -3453,61 +3701,125 @@ function drawSoul(s) {
 
 function drawGate() {
   if (S > 4) return;
-  const x = W - 60, y = H / 2 - 72, h = 144;
-  const lift = clamp(gateLift, 0, 1), open = lift > 0.02;
+  const x = W - 60, y = H / 2 - 72, h = 144, cx = x + 34;
+  const lift = clamp(gateLift, 0, 1.03), open = lift > 0.01;
+  const moving = gateAnimT > 0 && lift > 0.005 && lift < 1;
+  const jx = moving ? Math.sin(RT * 70) * 0.9 : 0;
+  const bh = Math.max(8, 22 + (h - 22) * (1 - lift));
   g.save();
+  // Recess
   const q = g.createLinearGradient(x, 0, W, 0);
-  q.addColorStop(0, '#1a0a0a'); q.addColorStop(1, '#000');
+  q.addColorStop(0, '#1a0a12'); q.addColorStop(1, '#000');
   g.fillStyle = q; g.fillRect(x, y, 60, h);
+  // Portal revealed behind the rising bars
   if (open) {
-    const pa = g.globalAlpha;
-    g.globalAlpha = pa * lift;
+    const pa = g.globalAlpha, la = Math.min(1, lift);
+    g.globalAlpha = pa * la;
     const q2 = g.createLinearGradient(x, 0, W, 0);
-    q2.addColorStop(0, '#0f3a22'); q2.addColorStop(1, '#000');
+    q2.addColorStop(0, '#0f4a2a'); q2.addColorStop(1, '#021208');
     g.fillStyle = q2; g.fillRect(x, y, 60, h);
-    drawGlow(x + 30, H / 2, 75 + Math.sin(RT * 3) * 8, 'green', 0.45);
-    g.fillStyle = `rgba(100,255,150,${0.22 + 0.12 * Math.sin(RT * 4)})`;
-    g.fillRect(x + 14, y + 12, 46, h - 12);
-    // Swirling portal motes
-    for (let i = 0; i < 6; i++) {
-      const an = RT * 2.2 + i * 1.047, rr = 18 + Math.sin(RT * 3 + i) * 6;
-      drawGlow(x + 36 + Math.cos(an) * rr * 0.6, H / 2 + Math.sin(an) * rr * 1.6, 5, 'green', 0.9);
+    drawGlow(cx, H / 2, 70 + Math.sin(RT * 3) * 8 + gateFlare * 60, 'green', 0.5 + gateFlare * 0.4);
+    // Vortex
+    g.save(); g.translate(cx, H / 2); g.scale(0.62, 1.55);
+    g.lineCap = 'round';
+    for (let arm = 0; arm < 3; arm++) {
+      g.strokeStyle = `rgba(150,255,190,${0.55 * la})`; g.lineWidth = 2.2;
+      g.beginPath();
+      for (let t = 0; t <= 1.001; t += 0.06) {
+        const r = 3 + t * 24, an = RT * 3.2 + arm * 2.094 + t * 5.2;
+        if (t) g.lineTo(Math.cos(an) * r, Math.sin(an) * r); else g.moveTo(Math.cos(an) * r, Math.sin(an) * r);
+      }
+      g.stroke();
     }
-    g.fillStyle = '#8fb';
+    g.restore();
+    g.fillStyle = '#b6ffd0';
     for (let i = 0; i < 3; i++) {
       const ax = x + 8 + ((RT * 40 + i * 18) % 48);
-      g.beginPath(); g.moveTo(ax, H / 2 - 8); g.lineTo(ax + 8, H / 2); g.lineTo(ax, H / 2 + 8); g.fill();
+      g.beginPath(); g.moveTo(ax, H / 2 - 7); g.lineTo(ax + 7, H / 2); g.lineTo(ax, H / 2 + 7); g.fill();
     }
     g.globalAlpha = pa;
+    // Light spilling out under the bars across the bridge floor
+    const op = g.globalCompositeOperation;
+    g.globalCompositeOperation = 'lighter';
+    const L = 90 + Math.min(1, lift) * 170 + gateFlare * 90;
+    const top = y + Math.min(h - 4, bh);
+    const sg = g.createLinearGradient(x + 6, 0, x - L, 0);
+    sg.addColorStop(0, `rgba(80,255,150,${0.2 * la + gateFlare * 0.25})`); sg.addColorStop(1, 'rgba(80,255,150,0)');
+    g.fillStyle = sg;
+    g.beginPath(); g.moveTo(x + 6, top); g.lineTo(x - L, top - L * 0.3); g.lineTo(x - L, y + h + L * 0.3); g.lineTo(x + 6, y + h); g.closePath(); g.fill();
+    for (let r = 0; r < 5; r++) {
+      const a0 = -0.28 + r * 0.14 + Math.sin(RT * 1.7 + r * 2.1) * 0.03;
+      const fl = 0.5 + 0.5 * Math.sin(RT * 3 + r * 1.3);
+      g.fillStyle = `rgba(150,255,190,${(0.05 + fl * 0.05) * la + gateFlare * 0.08})`;
+      const my = (top + y + h) / 2;
+      g.beginPath(); g.moveTo(x + 4, my); g.lineTo(x - L * 1.1, my + Math.tan(a0) * L - 6); g.lineTo(x - L * 1.1, my + Math.tan(a0) * L + 6); g.closePath(); g.fill();
+    }
+    g.globalCompositeOperation = op;
   }
-  // Portcullis: bars retract upward into the housing, spiked tips leading
-  const bh = 22 + (h - 22) * (1 - lift);
+  // Winch chains, links scrolling up while the gate rises
+  g.strokeStyle = '#8a8199'; g.lineWidth = 1.4;
+  const scroll = (lift * 160) % 6;
+  for (const chx of [x + 16, x + 52]) {
+    for (let ly = y - 2, j = 0; ly < y + bh - 12; ly += 6, j++) {
+      const yy = ly - scroll;
+      if (yy < y - 4) continue;
+      g.beginPath();
+      if (j % 2) g.ellipse(chx + jx, yy, 1.4, 3, 0, 0, 6.3); else g.ellipse(chx + jx, yy, 2.6, 3, 0, 0, 6.3);
+      g.stroke();
+    }
+  }
+  // Portcullis bars with spiked tips and crossbars
   g.strokeStyle = '#55556a'; g.lineWidth = 3;
   g.beginPath();
-  g.moveTo(x + 8, y + bh - 12); g.lineTo(x + 60, y + bh - 12);
-  if (bh > 70) { g.moveTo(x + 8, y + bh * 0.45); g.lineTo(x + 60, y + bh * 0.45); }
+  g.moveTo(x + 8 + jx, y + bh - 12); g.lineTo(x + 60 + jx, y + bh - 12);
+  if (bh > 70) { g.moveTo(x + 8 + jx, y + bh * 0.45); g.lineTo(x + 60 + jx, y + bh * 0.45); }
   g.stroke();
   g.strokeStyle = lift >= 1 ? '#8a98aa' : '#6a6a74'; g.lineWidth = 4;
-  g.fillStyle = '#9a9aa8';
+  g.fillStyle = '#a7a7b6';
   for (let i = 0; i < 6; i++) {
-    const bx = x + 12 + i * 9;
+    const bx = x + 12 + i * 9 + jx;
     g.beginPath(); g.moveTo(bx, y); g.lineTo(bx, y + bh); g.stroke();
     g.beginPath(); g.moveTo(bx - 3, y + bh); g.lineTo(bx, y + bh + 7); g.lineTo(bx + 3, y + bh); g.closePath(); g.fill();
   }
+  // Seal: fills with gold as coins are collected, ignites with the runes, then shatters
+  if (gateSeal > 0) {
+    const prog = CO.length ? (CO.length - need) / CO.length : 1;
+    const charge = gateAnimT > 0 ? gateRunes / 6 : 0;
+    drawGlow(cx, H / 2, 26 + charge * 18, charge > 0 ? 'cyan' : 'purple', 0.35 + charge * 0.5);
+    g.fillStyle = '#120b22'; g.strokeStyle = charge > 0 ? '#7df9ff' : '#8a6acc'; g.lineWidth = 2;
+    g.beginPath(); g.arc(cx, H / 2, 13, 0, 6.3); g.fill(); g.stroke();
+    g.strokeStyle = '#fbbf24'; g.lineWidth = 3; g.lineCap = 'round';
+    g.beginPath(); g.arc(cx, H / 2, 9.5, -Math.PI / 2, -Math.PI / 2 + prog * 6.283); g.stroke();
+    g.fillStyle = charge > 0 ? '#e0fbff' : '#c4b5fd';
+    g.beginPath(); g.arc(cx, H / 2 - 2, 2.6, 0, 6.3); g.fill();
+    g.fillRect(cx - 1.2, H / 2 - 1, 2.4, 6);
+  }
+  // Stone frame with rune slots
   g.fillStyle = '#2e2a3e'; g.strokeStyle = '#7a70a0'; g.lineWidth = 2;
   g.fillRect(x - 8, y - 14, 68, 22); g.strokeRect(x - 8, y - 14, 68, 22);
   g.fillRect(x - 8, y + 8, 14, h - 8); g.strokeRect(x - 8, y + 8, 14, h - 8);
   g.fillRect(x - 8, y + h, 68, 10);
+  g.beginPath(); g.moveTo(x + 18, y - 14); g.lineTo(x + 26, y - 24); g.lineTo(x + 34, y - 14); g.closePath(); g.fill(); g.stroke();
+  const RUNES = [[x - 1, y + 26], [x - 1, y + 56], [x - 1, y + 86], [x - 1, y + 116], [x + 10, y - 3], [x + 42, y - 3]];
+  RUNES.forEach(([rx, ry], i) => {
+    const lit = i < gateRunes || lift >= 1;
+    if (lit) drawGlow(rx, ry, 11 + gateFlare * 8, 'green', 0.7);
+    g.strokeStyle = lit ? '#9dffc4' : '#4f4670'; g.lineWidth = 1.5;
+    g.beginPath();
+    g.moveTo(rx - 3, ry - 4); g.lineTo(rx + 3, ry - 4); g.lineTo(rx - 2, ry + 4); g.lineTo(rx + 3, ry + 4);
+    if (i % 2) { g.moveTo(rx, ry - 5); g.lineTo(rx, ry + 5); }
+    g.stroke();
+  });
   // Winch gear turns while the gate rises
   g.save(); g.translate(x + 2, y - 3); g.rotate(lift * 9);
   g.strokeStyle = '#a99fd0'; g.lineWidth = 1.6;
   g.beginPath(); g.arc(0, 0, 5, 0, 6.3); g.stroke();
   for (let i = 0; i < 6; i++) { const an = i * 1.047; g.beginPath(); g.moveTo(Math.cos(an) * 5, Math.sin(an) * 5); g.lineTo(Math.cos(an) * 8, Math.sin(an) * 8); g.stroke(); }
   g.restore();
-  const label = lift >= 1 ? 'PORTAL OPEN' : open ? 'GATE RISING…' : 'GATE LOCKED';
-  g.fillStyle = lift >= 1 ? '#6ee7b7' : open ? '#fde68a' : '#fda4af';
+  const label = lift >= 1 ? 'PORTAL OPEN' : gateAnimT > 0 ? (gateSeal > 0 ? 'UNSEALING…' : 'GATE RISING…') : 'GATE LOCKED';
+  g.fillStyle = lift >= 1 ? '#6ee7b7' : gateAnimT > 0 ? '#fde68a' : '#fda4af';
   g.font = `700 10px ${F_DISPLAY}`; g.textAlign = 'right';
-  g.fillText(label, W - 6, y - 20);
+  g.fillText(label, W - 6, y - 28);
   g.restore();
 }
 function drawEntry() {
@@ -3691,6 +4003,12 @@ function hud() {
     g.strokeStyle = '#fde047'; g.lineWidth = 1;
     g.strokeRect(138 - sh * 6, 45 - sh * 4, 118 + sh * 12, 5 + sh * 8);
     g.globalAlpha = 1;
+  }
+
+  if (runCheated) {
+    g.font = `800 9px ${F_MONO}`; g.textAlign = 'left';
+    g.fillStyle = `rgba(251,113,133,${0.7 + 0.3 * Math.sin(RT * 4)})`;
+    g.fillText('⚡ WARP RUN — BEST NOT SAVED', 14, 76);
   }
 
   // Stage panel
@@ -3882,77 +4200,125 @@ function hud() {
    ============================================================================ */
 const heroPreviewEl = document.getElementById('hero-mini-preview');
 const heroPreviewCtx = heroPreviewEl.getContext('2d');
+/* Title-screen state & pre-baked cloud sprites */
+const CLOUD_SPR = [];
+for (let c = 0; c < 3; c++) {
+  const cs = mk(340, 140, 1);
+  for (let i = 0; i < 16; i++) {
+    const px = R(50, 290), py = R(55, 95) - Math.sin(((px - 50) / 240) * Math.PI) * 26, r = R(24, 50);
+    const gd = cs.x.createRadialGradient(px, py - r * 0.35, r * 0.1, px, py, r);
+    gd.addColorStop(0, 'rgba(92,78,140,0.5)'); gd.addColorStop(0.55, 'rgba(40,31,72,0.45)'); gd.addColorStop(1, 'rgba(20,14,40,0)');
+    cs.x.fillStyle = gd; cs.x.beginPath(); cs.x.arc(px, py, r, 0, 6.3); cs.x.fill();
+  }
+  CLOUD_SPR.push(cs.c);
+}
+const TCLOUD = Array.from({ length: 6 }, (_, i) => ({ x: R(-200, W), y: R(24, 190), s: R(0.8, 1.5), v: R(5, 15), k: i % 3, a: R(0.55, 0.95) }));
+const TGHOST = [
+  { x0: 120, y0: 150, s: 0.85, sp: 0.5, ph: 0, far: true }, { x0: 470, y0: 120, s: 0.75, sp: 0.42, ph: 2, far: true },
+  { x0: 690, y0: 175, s: 0.9, sp: 0.55, ph: 4, far: true }, { x0: 300, y0: 215, s: 1.35, sp: 0.35, ph: 1, far: false },
+  { x0: 860, y0: 245, s: 1.5, sp: 0.3, ph: 3, far: false }
+];
+let TBATS = [], TSTAR = null, titleBatT = 3, titleStarT = 2;
 const TITLE_LAYERS = [
-  { y: 300, amp: 64, f1: 0.0071, f2: 0.019, spd: 5, col: '#1b1433', lit: '#3a2d63' },
-  { y: 352, amp: 70, f1: 0.0102, f2: 0.031, spd: 13, col: '#120c25', lit: '#2a1f4a' },
-  { y: 402, amp: 52, f1: 0.0153, f2: 0.047, spd: 26, col: '#0a0717', lit: '#1c1534' }
+  { y: 300, amp: 64, f1: 0.0071, f2: 0.019, spd: 5, top: '#231a42', bot: '#120c26', rim: 0.28 },
+  { y: 352, amp: 70, f1: 0.0102, f2: 0.031, spd: 13, top: '#171030', bot: '#0b0719', rim: 0.2 },
+  { y: 402, amp: 52, f1: 0.0153, f2: 0.047, spd: 26, top: '#0e0a1e', bot: '#05030c', rim: 0.14 }
 ];
 function ridgeY(L, u) {
   return L.y - Math.abs(Math.sin(u * L.f1 + 1.2)) * L.amp - Math.abs(Math.sin(u * L.f2)) * L.amp * 0.25;
 }
 function drawTitle() {
+  // Sky with a violet horizon band and faint nebulae
   const gr = g.createLinearGradient(0, 0, 0, H);
-  gr.addColorStop(0, '#070512'); gr.addColorStop(1, '#160b24');
+  gr.addColorStop(0, '#05030f'); gr.addColorStop(0.55, '#130a26'); gr.addColorStop(0.8, '#24123a'); gr.addColorStop(1, '#0b0618');
   g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  drawGlow(250, 120, 280, 'purple', 0.1);
+  drawGlow(640, 200, 240, 'blue', 0.07);
 
-  for (const s of STARS) {
-    g.globalAlpha = 0.35 + 0.35 * Math.sin(RT * s.s + s.p);
+  for (const st of STARS) {
+    g.globalAlpha = 0.3 + 0.4 * Math.sin(RT * st.s + st.p);
     g.fillStyle = '#e8e4ff';
-    g.fillRect(s.x, s.y, s.r * 1.6, s.r * 1.6);
+    g.fillRect(st.x, st.y, st.r * 1.6, st.r * 1.6);
+  }
+  g.globalAlpha = 1;
+  if (TSTAR) {
+    const a = TSTAR.t / TSTAR.m, len = 90;
+    const sp = Math.hypot(TSTAR.vx, TSTAR.vy), ux = TSTAR.vx / sp, uy = TSTAR.vy / sp;
+    const tg = g.createLinearGradient(TSTAR.x, TSTAR.y, TSTAR.x - ux * len, TSTAR.y - uy * len);
+    tg.addColorStop(0, `rgba(255,255,255,${a})`); tg.addColorStop(1, 'rgba(255,255,255,0)');
+    g.strokeStyle = tg; g.lineWidth = 2; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(TSTAR.x, TSTAR.y); g.lineTo(TSTAR.x - ux * len, TSTAR.y - uy * len); g.stroke();
+    drawGlow(TSTAR.x, TSTAR.y, 8, 'white', a);
+  }
+
+  // Moon: halo, rim ring, craters
+  const mx = 810, my = 100, mr = 40 + Math.sin(RT * 1.1) * 1.2;
+  drawGlow(mx, my, 150 + Math.sin(RT * 1.1) * 8, 'gold', 0.42);
+  g.strokeStyle = 'rgba(255,236,190,0.12)'; g.lineWidth = 1.5;
+  g.beginPath(); g.arc(mx, my, mr + 26, 0, 6.3); g.stroke();
+  const mg = g.createRadialGradient(mx - 12, my - 12, 4, mx, my, mr);
+  mg.addColorStop(0, '#fffbeb'); mg.addColorStop(1, '#f5deb0');
+  g.fillStyle = mg;
+  g.beginPath(); g.arc(mx, my, mr, 0, 6.3); g.fill();
+  g.fillStyle = 'rgba(170,140,80,0.22)';
+  g.beginPath(); g.arc(mx - 12, my - 8, 8, 0, 6.3); g.arc(mx + 14, my + 9, 6, 0, 6.3); g.arc(mx + 4, my - 18, 4, 0, 6.3); g.fill();
+
+  // Clouds drifting across the moon
+  for (const c of TCLOUD) {
+    g.globalAlpha = c.a * (1 + titleFlash * 0.6);
+    g.drawImage(CLOUD_SPR[c.k], c.x, c.y, 340 * c.s, 140 * c.s);
   }
   g.globalAlpha = 1;
 
-  // Moon with breathing halo
-  const mx = 820, my = 96, mr = 36 + Math.sin(RT * 1.1) * 1.2;
-  drawGlow(mx, my, 110 + Math.sin(RT * 1.1) * 6, 'gold', 0.5);
-  g.fillStyle = '#fef3c7';
-  g.beginPath(); g.arc(mx, my, mr, 0, 6.3); g.fill();
-  g.fillStyle = 'rgba(180,150,80,0.25)';
-  g.beginPath(); g.arc(mx - 10, my - 6, 7, 0, 6.3); g.arc(mx + 12, my + 8, 5, 0, 6.3); g.fill();
-
-  // Lightning bolt (behind the mountains)
+  // Lightning (behind the mountains)
   if (titleBolt) {
     const a = (titleBolt.t / titleBolt.m) * (Math.random() < 0.25 ? 0.4 : 1);
     g.save();
-    g.strokeStyle = `rgba(230,240,255,${a})`; g.lineWidth = 2.6; g.lineJoin = 'round';
-    g.beginPath(); titleBolt.pts.forEach((pp, i) => i ? g.lineTo(pp[0], pp[1]) : g.moveTo(pp[0], pp[1])); g.stroke();
-    g.strokeStyle = `rgba(160,180,255,${a * 0.5})`; g.lineWidth = 7; g.stroke();
+    g.lineJoin = 'round';
+    g.beginPath(); titleBolt.pts.forEach((pp, i) => i ? g.lineTo(pp[0], pp[1]) : g.moveTo(pp[0], pp[1]));
+    g.strokeStyle = `rgba(160,180,255,${a * 0.45})`; g.lineWidth = 8; g.stroke();
+    g.strokeStyle = `rgba(235,242,255,${a})`; g.lineWidth = 2.4; g.stroke();
     g.restore();
     const tip = titleBolt.pts[titleBolt.pts.length - 1];
-    drawGlow(tip[0], tip[1], 90, 'blue', a * 0.6);
+    drawGlow(tip[0], tip[1], 100, 'blue', a * 0.6);
   }
 
-  // Three parallax mountain layers; the far one carries a ruined castle
+  // Parallax ridges with moonlit rims
   TITLE_LAYERS.forEach((L, li) => {
     const off = RT * L.spd;
-    g.fillStyle = titleFlash > 0.05 ? L.lit : L.col;
-    if (titleFlash > 0.05) { g.globalAlpha = 1; }
-    g.beginPath();
-    g.moveTo(0, H);
-    for (let x = 0; x <= W + 12; x += 12) g.lineTo(x, ridgeY(L, x + off));
+    const pts = [];
+    for (let x = 0; x <= W + 12; x += 12) pts.push([x, ridgeY(L, x + off)]);
+    const lg = g.createLinearGradient(0, L.y - L.amp * 1.3, 0, H);
+    lg.addColorStop(0, L.top); lg.addColorStop(1, L.bot);
+    g.fillStyle = lg;
+    g.beginPath(); g.moveTo(0, H);
+    for (const pp of pts) g.lineTo(pp[0], pp[1]);
     g.lineTo(W, H); g.closePath(); g.fill();
-    if (titleFlash > 0.05) {
-      g.fillStyle = L.col; g.globalAlpha = 1 - titleFlash * (0.7 - li * 0.15);
-      g.fill();
-      g.globalAlpha = 1;
-    }
+    if (titleFlash > 0.02) { g.fillStyle = `rgba(150,140,235,${titleFlash * 0.22 * (1 - li * 0.25)})`; g.fill(); }
+    g.beginPath();
+    pts.forEach((pp, i) => i ? g.lineTo(pp[0], pp[1]) : g.moveTo(pp[0], pp[1]));
+    g.strokeStyle = `rgba(200,185,255,${L.rim + titleFlash * 0.3})`; g.lineWidth = 1.3; g.stroke();
+
     if (li === 0) {
+      // Ruined castle on the far ridge with flickering windows
       const period = 1100;
-      const cx = (((520 - off) % period) + period) % period - 80;
+      const cx = (((540 - off) % period) + period) % period - 80;
       const base = ridgeY(L, cx + off) + 6;
-      g.fillStyle = titleFlash > 0.05 ? L.lit : L.col;
+      g.fillStyle = L.top;
       g.fillRect(cx - 34, base - 46, 68, 46);
-      [[-38, 70, 12], [-6, 92, 14], [26, 62, 11]].forEach(([dx, th, tw]) => {
+      for (let bx = -34; bx < 34; bx += 10) g.fillRect(cx + bx, base - 52, 6, 6);
+      [[-38, 70, 12], [-6, 94, 14], [26, 62, 11]].forEach(([dx, th, tw]) => {
         g.fillRect(cx + dx, base - th, tw, th);
-        g.beginPath(); g.moveTo(cx + dx - 3, base - th); g.lineTo(cx + dx + tw / 2, base - th - 18); g.lineTo(cx + dx + tw + 3, base - th); g.closePath(); g.fill();
+        g.beginPath(); g.moveTo(cx + dx - 3, base - th); g.lineTo(cx + dx + tw / 2, base - th - 20); g.lineTo(cx + dx + tw + 3, base - th); g.closePath(); g.fill();
       });
-      const wf = 0.6 + 0.4 * Math.sin(RT * 3);
-      g.fillStyle = `rgba(255,190,90,${0.55 * wf})`;
-      g.fillRect(cx + 1, base - 70, 3, 5); g.fillRect(cx - 32, base - 52, 3, 4); g.fillRect(cx + 30, base - 44, 3, 4);
-    }
-    if (li === 0) {
-      // Drifting ghosts between the far ridges
-      for (let i = 0; i < 5; i++) ghost(110 + i * 175, 155 + Math.sin(RT * 1.6 + i) * 16, RT * 3 + i, 1.4, '#cbd5e1', '#7df9ff', 'cyan');
+      const wf = 0.55 + 0.45 * Math.sin(RT * 3.3) * Math.sin(RT * 1.7);
+      g.fillStyle = `rgba(255,190,90,${0.5 + 0.3 * wf})`;
+      g.fillRect(cx + 1, base - 74, 3, 5); g.fillRect(cx - 33, base - 54, 3, 4); g.fillRect(cx + 30, base - 46, 3, 4); g.fillRect(cx - 12, base - 30, 3, 4);
+      drawGlow(cx + 2, base - 72, 10, 'gold', 0.5 * wf);
+      for (const tg of TGHOST) if (tg.far) {
+        const gx = tg.x0 + Math.sin(RT * tg.sp + tg.ph) * 60, gy = tg.y0 + Math.sin(RT * tg.sp * 1.7 + tg.ph) * 18;
+        ghost(gx, gy, RT * 3 + tg.ph, tg.s, '#aab4cc', '#7df9ff', 'cyan', 0.5);
+      }
     }
     if (li === 1) {
       for (const f of FOG) {
@@ -3960,6 +4326,11 @@ function drawTitle() {
         g.drawImage(GLOW_CACHE.white, f.x - f.w / 2, 330 + (f.y % 90) - f.w * 0.1, f.w, f.w * 0.24);
       }
       g.globalAlpha = 1;
+      for (const tg of TGHOST) if (!tg.far) {
+        const gx = tg.x0 + Math.sin(RT * tg.sp + tg.ph) * 80, gy = tg.y0 + Math.sin(RT * tg.sp * 1.7 + tg.ph) * 22;
+        ghost(gx, gy, RT * 3 + tg.ph, tg.s, '#d6deee', '#7df9ff', 'cyan', 0.85);
+      }
+      drawBats(TBATS);
     }
   });
 
@@ -3975,31 +4346,47 @@ function drawTitle() {
   for (let x = -40; x < W + 160; x += 190) {
     g.beginPath(); g.moveTo(x, H); g.lineTo(x, DY + 56); g.quadraticCurveTo(x + 75, DY + 16, x + 150, DY + 56); g.lineTo(x + 150, H); g.closePath(); g.fill();
   }
-  g.fillStyle = '#17112a'; g.fillRect(0, DY, W, 16);
+  g.fillStyle = '#19122d'; g.fillRect(0, DY, W, 16);
   g.strokeStyle = 'rgba(0,0,0,0.5)'; g.lineWidth = 1;
   for (let x = 0, r = 0; x < W; x += 32, r++) { g.beginPath(); g.moveTo(x + (r % 2) * 16, DY); g.lineTo(x + (r % 2) * 16, DY + 16); g.stroke(); }
   g.beginPath(); g.moveTo(0, DY + 8); g.lineTo(W, DY + 8); g.stroke();
-  g.strokeStyle = '#3b2d5e'; g.lineWidth = 2;
+  g.strokeStyle = 'rgba(200,185,255,0.25)'; g.lineWidth = 1.5;
   g.beginPath(); g.moveTo(0, DY); g.lineTo(W, DY); g.stroke();
   g.fillStyle = '#1d1630'; g.fillRect(0, DY - 22, W, 4);
   for (let x = 20, j = 0; x < W; x += 80, j++) {
     g.fillStyle = '#1d1630'; g.fillRect(x - 3, DY - 26, 6, 26);
     g.fillStyle = '#2b2245'; g.fillRect(x - 5, DY - 30, 10, 5);
     if (j % 2 === 0) {
-      const fl = 0.8 + 0.2 * Math.sin(RT * 8 + x);
-      drawGlow(x, DY - 38, 30 * fl, 'gold', 0.6);
+      const fl = 0.8 + 0.2 * Math.sin(RT * 8 + x) + Math.sin(RT * 23 + x) * 0.04;
+      drawGlow(x, DY - 38, 34 * fl, 'gold', 0.6);
+      drawGlow(x, DY + 4, 46 * fl, 'gold', 0.12);
       g.fillStyle = '#ffd166'; g.fillRect(x - 2.5, DY - 42, 5, 7);
     }
   }
 
-  // Selected hero standing watch on the bridge
+  // Selected hero on watch, cloak streaming in the wind
   const hx = 150, hh = HEROES[selectedHeroIdx];
-  drawGlow(hx, DY - 40, 80, hh.glowKey, 0.35);
+  drawGlow(hx, DY - 40, 86, hh.glowKey, 0.32);
   g.fillStyle = 'rgba(0,0,0,0.5)';
   g.beginPath(); g.ellipse(hx, DY + 2, 26, 6, 0, 0, 6.3); g.fill();
-  drawHeroModel(g, hx, DY - 48, RT * 6, selectedHeroIdx, -0.35, 0, 0, 2.2, false);
+  const wind = -5 - Math.sin(RT * 1.4) * 2.5 - Math.max(0, Math.sin(RT * 0.6)) * 2;
+  drawHeroModel(g, hx, DY - 48, RT * 6, selectedHeroIdx, -0.35, 0, 0, 2.2, false, wind);
+  const tipX = hx + 57, tipY = DY - 72;
+  for (let i = 0; i < 3; i++) {
+    const an = RT * 2.6 + i * 2.094;
+    drawGlow(tipX + Math.cos(an) * 14, tipY + Math.sin(an) * 7, 5, hh.glowKey, 0.9);
+  }
 
-  if (titleFlash > 0) { g.fillStyle = `rgba(210,220,255,${titleFlash * 0.28})`; g.fillRect(0, 0, W, H); }
+  // Low mist rolling across the deck
+  for (let i = 0; i < 4; i++) {
+    const mxp = ((RT * (14 + i * 5) + i * 300) % (W + 500)) - 250;
+    g.globalAlpha = 0.07;
+    g.drawImage(GLOW_CACHE.white, mxp - 220, DY - 28, 440, 56);
+  }
+  g.globalAlpha = 1;
+
+  if (titleFlash > 0) { g.fillStyle = `rgba(210,220,255,${titleFlash * 0.22})`; g.fillRect(0, 0, W, H); }
+  g.drawImage(VIG.c, 0, 0, W, H);
 
   heroPreviewCtx.clearRect(0, 0, 72, 72);
   drawHeroModel(heroPreviewCtx, 36, 42, RT * 6, selectedHeroIdx, -0.2, 60, 0, 1.35, false);
@@ -4015,7 +4402,55 @@ function drawTitle() {
    MAIN LOOP — fixed-step physics, per-frame rendering with interpolation-free smoothing
    ============================================================================ */
 let acc = 0, lastTs = 0;
+/* Render interpolation: physics runs at a fixed 120 Hz; positions are blended between the last two
+   physics states so motion is smooth on 60/90/120/144 Hz screens and through dropped frames. */
+const IOBJ = [];
+function snapPrev() {
+  if (P) { P.px = P.x; P.py = P.y; }
+  for (const o of E) { o.px = o.x; o.py = o.y; }
+  for (const o of EB) { o.px = o.x; o.py = o.y; }
+  for (const o of PB) { o.px = o.x; o.py = o.y; }
+  for (const o of CO) { o.px = o.x; o.py = o.y; }
+  if (boss) { boss.px = boss.x; boss.py = boss.y; }
+}
+function interpOne(o, a) {
+  if (o.px === undefined) return;
+  const dx = o.x - o.px, dy = o.y - o.py;
+  if (dx * dx + dy * dy > 90 * 90) return;          // teleports snap instead of smearing
+  o._x = o.x; o._y = o.y;
+  o.x = o.px + dx * a; o.y = o.py + dy * a;
+  IOBJ.push(o);
+}
+function interpBegin(a) {
+  IOBJ.length = 0;
+  if (a >= 0.999) return;
+  if (P) interpOne(P, a);
+  for (const o of E) interpOne(o, a);
+  for (const o of EB) interpOne(o, a);
+  for (const o of PB) interpOne(o, a);
+  for (const o of CO) interpOne(o, a);
+  if (boss) interpOne(boss, a);
+}
+function interpEnd() { for (const o of IOBJ) { o.x = o._x; o.y = o._y; } IOBJ.length = 0; }
+
+/* Adaptive quality governor (AUTO graphics): steps quality down if the frame rate stays low */
+let emaFps = 60, perfLowT = 0, perfCool = 0;
+function perfGovern(dt) {
+  if (CFG.gfx !== 'auto' || scene !== 'play' || document.hidden) { perfLowT = 0; return; }
+  if (perfCool > 0) { perfCool -= dt; return; }
+  emaFps += (1 / Math.max(dt, 1e-3) - emaFps) * 0.06;
+  if (emaFps < 48) perfLowT += dt; else perfLowT = Math.max(0, perfLowT - dt * 0.5);
+  if (perfLowT > 1.6 && perfLevel < 3) {
+    perfLevel++; perfLowT = 0; emaFps = 60; perfCool = 2.5;
+    try { localStorage.setItem('hb_perf', String(perfLevel)); } catch (e) {}
+    setupHiDPI();
+  }
+}
+
+let inRunCls = null;
 function frame(ts) {
+  const inRun = scene === 'play' || scene === 'pause';
+  if (inRun !== inRunCls) { inRunCls = inRun; document.body.classList.toggle('in-run', inRun); }
   if (!lastTs) lastTs = ts;
   const dt = Math.min(0.1, (ts - lastTs) / 1000);
   lastTs = ts;
@@ -4034,17 +4469,20 @@ function frame(ts) {
     if (scene === 'play') {
       acc += dt;
       let guard = 0;
-      while (acc >= STEP && guard++ < 12) { step(STEP); acc -= STEP; }
+      while (acc >= STEP && guard++ < 12) { snapPrev(); step(STEP); acc -= STEP; }
       if (guard >= 12) acc = 0;
     } else {
       acc = 0;
     }
+    perfGovern(dt);
+    interpBegin(scene === 'play' ? clamp(acc / STEP, 0, 1) : 1);
     g.save();
     updateShake(dt);
     applyShake();
     drawBoard();
     g.restore();
     hud();
+    interpEnd();
     if ((scene === 'over' || scene === 'win') && endHeroCtx && lastEnd) {
       endHeroCtx.clearRect(0, 0, 96, 96);
       drawHeroModel(endHeroCtx, 48, 58, RT * 5, lastEnd.hero, -0.25, scene === 'win' ? 50 : 0, 0, 1.75, false);
