@@ -1,0 +1,188 @@
+/* Responsive behaviour, overlays (rotate hint, toast) and cheat UI */
+/* Menu layer: positioned and scaled by src/ui/layout.js */
+#ui-root {
+  padding-top: 56px !important;
+  inset: auto !important;
+  left: 0 !important;
+  top: 0 !important;
+  transform-origin: 0 0;
+}
+
+/* Compact layout for short landscape phones */
+body.compact #ui-root {
+  padding-top: 46px !important;
+  padding-bottom: 4px !important;
+}
+body.compact #menu-main {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+body.compact #menu-main h1 {
+  font-size: 42px;
+  line-height: 1.05;
+}
+body.compact .hub-hint,
+body.compact #diff-desc,
+body.compact .hub-tagline {
+  display: none !important;
+}
+body.compact .obj-strip {
+  margin-bottom: 8px;
+}
+body.compact #hero-card-hub {
+  margin-bottom: 8px;
+  padding: 6px 10px;
+}
+body.compact .diff-picker {
+  margin-bottom: 8px;
+}
+#rotate-hint {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: radial-gradient(circle, #140e2a, #040308);
+  color: #e2e8f0;
+  text-align: center;
+  font-family: 'Rajdhani', sans-serif;
+}
+#rotate-hint .rot-icon {
+  font-size: 54px;
+  animation: rotHint 2s ease-in-out infinite;
+  color: #7df9ff;
+}
+#rotate-hint b {
+  font-family: 'Chakra Petch', sans-serif;
+  letter-spacing: 0.12em;
+  font-size: 20px;
+  color: #fde68a;
+}
+@keyframes rotHint {
+  0%,
+  20% {
+    transform: rotate(0);
+  }
+  60%,
+  100% {
+    transform: rotate(-90deg);
+  }
+}
+@media (orientation: portrait) and (pointer: coarse) {
+  #rotate-hint {
+    display: flex;
+  }
+}
+#toast {
+  position: absolute;
+  left: 50%;
+  top: 52px;
+  transform: translate(-50%, -8px);
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  font-family: 'Chakra Petch', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: #fde68a;
+  background: rgba(10, 7, 22, 0.94);
+  border: 1px solid rgba(253, 224, 71, 0.45);
+  border-radius: 999px;
+  padding: 6px 14px;
+  white-space: nowrap;
+}
+#toast.on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+/* On short screens, keep only a compact pause button over the HUD during a run */
+body.compact.in-run #btn-mute-quick,
+body.compact.in-run #btn-fs-quick,
+body.compact.in-run #btn-install {
+  display: none !important;
+}
+body.compact.in-run .pause-lbl {
+  display: none;
+}
+body.compact.in-run #btn-pause-quick {
+  padding: 6px 12px;
+  font-size: 15px;
+}
+.pause-tools {
+  display: none;
+  gap: 8px;
+}
+#modal-status {
+  max-height: 96%;
+  overflow-y: auto;
+}
+body.compact #modal-status {
+  padding: 10px 16px !important;
+}
+body.compact #modal-status h2 {
+  font-size: 28px;
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+body.compact #status-desc {
+  margin-bottom: 8px;
+}
+body.compact #modal-status > .grid {
+  margin-bottom: 10px;
+  padding: 6px;
+}
+body.compact #modal-status button {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+body.compact #modal-status .flex-col {
+  gap: 6px;
+}
+body.compact .pause-tools {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.warp-row {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+body.cheats .warp-row {
+  display: flex;
+}
+.warp-row span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #fb7185;
+  letter-spacing: 0.15em;
+  font-weight: 800;
+}
+.warp-row button {
+  font-family: 'Chakra Petch', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  width: 30px;
+  height: 26px;
+  border-radius: 8px;
+  border: 1px solid rgba(251, 113, 133, 0.5);
+  background: rgba(40, 8, 20, 0.85);
+  color: #fecdd3;
+  cursor: pointer;
+}
+.warp-row button:hover {
+  background: rgba(120, 20, 50, 0.9);
+  color: #fff;
+}
+#top-quick-bar {
+  z-index: 40;
+}

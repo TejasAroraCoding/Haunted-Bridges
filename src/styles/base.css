@@ -1,0 +1,155 @@
+/* Page frame, panels, buttons and shared component styles */
+:root {
+  --bg: #05040a;
+}
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  overflow: hidden;
+  font-family: 'Rajdhani', system-ui, sans-serif;
+  touch-action: none;
+}
+.serif-title,
+.font-display {
+  font-family: 'Chakra Petch', sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.mono-font,
+.font-mono-tech {
+  font-family: 'JetBrains Mono', monospace;
+}
+#app-wrap {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  background: radial-gradient(circle at center, #110d24 0%, #040308 100%);
+}
+/* The stage is sized by JS to an exact 16:9 box that always fits the screen (letterboxed) */
+#game-stage {
+  position: relative;
+  width: 960px;
+  height: 540px;
+  flex: 0 0 auto;
+  box-shadow:
+    0 0 60px rgba(0, 0, 0, 0.95),
+    0 0 25px rgba(138, 106, 204, 0.18);
+  overflow: hidden;
+  background: #000;
+}
+canvas#c {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: none;
+}
+.ui-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 20;
+}
+.interactive {
+  pointer-events: auto;
+}
+.fantasy-panel,
+.neo-panel {
+  background: linear-gradient(160deg, rgba(14, 11, 29, 0.94) 0%, rgba(7, 5, 16, 0.98) 100%);
+  border: 1px solid rgba(125, 249, 255, 0.28);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.85),
+    inset 0 0 24px rgba(125, 249, 255, 0.06);
+  backdrop-filter: blur(10px);
+}
+.btn-fantasy,
+.btn-neo {
+  font-family: 'Chakra Petch', sans-serif;
+  background: linear-gradient(180deg, #241b42 0%, #130e24 100%);
+  border: 1px solid rgba(255, 204, 102, 0.45);
+  color: #ffe8b3;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+}
+.btn-fantasy:hover,
+.btn-neo:hover {
+  background: linear-gradient(180deg, #382966 0%, #20163d 100%);
+  border-color: #7df9ff;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(125, 249, 255, 0.25);
+}
+.btn-fantasy:active,
+.btn-neo:active {
+  transform: translateY(0) scale(0.98);
+}
+.btn-primary-cta,
+.btn-neo-cta {
+  background: linear-gradient(180deg, #e07b22 0%, #8f390e 100%);
+  border: 1px solid #ffdf8e;
+  color: #fff;
+  box-shadow: 0 0 24px rgba(255, 130, 30, 0.45);
+}
+.btn-primary-cta:hover,
+.btn-neo-cta:hover {
+  background: linear-gradient(180deg, #f59336 0%, #b04814 100%);
+  border-color: #fff;
+  box-shadow: 0 0 32px rgba(255, 170, 60, 0.75);
+}
+.hero-card {
+  background: linear-gradient(180deg, rgba(24, 18, 46, 0.88) 0%, rgba(11, 8, 22, 0.95) 100%);
+  border: 1px solid rgba(150, 130, 210, 0.3);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.hero-card:hover {
+  border-color: rgba(125, 249, 255, 0.65);
+  transform: translateY(-3px);
+}
+.hero-card.selected {
+  background: linear-gradient(180deg, rgba(48, 34, 88, 0.94) 0%, rgba(20, 13, 40, 0.98) 100%);
+  border: 2px solid #ffcc66;
+  box-shadow: 0 0 25px rgba(255, 204, 102, 0.35);
+}
+.custom-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 204, 102, 0.4);
+  border-radius: 3px;
+}
+#touch-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+}
+.touch-zone {
+  pointer-events: auto;
+  touch-action: none;
+}

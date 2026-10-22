@@ -1,0 +1,8 @@
+# Netlify: connect the repository and it builds with these settings.
+# Response headers live in public/_headers (shared with Cloudflare Pages).
+[build]
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
