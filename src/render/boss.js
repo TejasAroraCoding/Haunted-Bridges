@@ -102,8 +102,25 @@ function drawBossWindup(bx, by, w) {
   drawGlow(bx, by, 30 + w * 44, nx === 'ring' || nx === 'crush' ? 'red' : 'purple', w * 0.7);
 }
 
+const DEATH_FADE_TIME = 3.0; // matches boss.deadT set in game/boss.js
+
+/** Draws Malakor; after his defeat he flickers, shrinks and dissolves over a few seconds. */
 export function drawBoss() {
-  if (!state.boss) return;
+  const boss = state.boss;
+  if (!boss) return;
+  if (boss.dead) {
+    const life = clamp(boss.deadT / DEATH_FADE_TIME, 0, 1);
+    if (life <= 0) return;
+    const shrink = 0.55 + 0.45 * life;
+    ctx.globalAlpha *= life * (0.7 + 0.3 * Math.sin(state.realTime * 38));
+    ctx.translate(boss.x, boss.y);
+    ctx.scale(shrink, shrink);
+    ctx.translate(-boss.x, -boss.y);
+  }
+  drawBossBody();
+}
+
+function drawBossBody() {
   if (state.boss.state === 'crushWarn') {
     const pulse = 0.16 + 0.1 * Math.sin(state.realTime * 28);
     ctx.fillStyle = `rgba(255,42,85,${pulse})`;
@@ -249,12 +266,13 @@ export function drawBoss() {
   const pxo = Math.cos(ea) * 2.6,
     pyo = Math.sin(ea) * 3.4;
   ctx.fillStyle = eyeCol;
-  ctx.globalAlpha = Math.min(1, 0.85 + Math.sin(state.realTime * 5) * 0.15 + wind * 0.3);
+  const bodyAlpha = ctx.globalAlpha;
+  ctx.globalAlpha = bodyAlpha * Math.min(1, 0.85 + Math.sin(state.realTime * 5) * 0.15 + wind * 0.3);
   ctx.beginPath();
   ctx.ellipse(-12, -12, 5.5, 8.5, -0.2, 0, 6.3);
   ctx.ellipse(12, -12, 5.5, 8.5, 0.2, 0, 6.3);
   ctx.fill();
-  ctx.globalAlpha = 1;
+  ctx.globalAlpha = bodyAlpha;
   ctx.fillStyle = '#05010a';
   const pupH = 4.2 - wind * 1.6;
   ctx.beginPath();
@@ -316,16 +334,18 @@ export function drawBossIntro() {
   ctx.fillStyle = '#cbd5e1';
   ctx.fillText(`3 PHASES  ·  ${state.boss ? state.boss.max : 0} HP  ·  ${difficulty().label}`, cx, H / 2 + 52);
   if (k > 0.15) {
-    ctx.textAlign = 'right';
+    // Top-left of the letterbox bar: the top-right corner sits under the on-screen buttons.
+    ctx.textAlign = 'left';
     ctx.font = `700 10px ${F_MONO}`;
     ctx.fillStyle = '#94a3b8';
-    ctx.fillText(isTouchDevice ? 'TAP RIGHT STICK TO SKIP ▸' : 'CLICK / SPACE TO SKIP ▸', W - 22, 40);
+    ctx.fillText(isTouchDevice ? 'TAP RIGHT STICK TO SKIP ▸' : 'CLICK / SPACE TO SKIP ▸', 22, 40);
   }
   ctx.restore();
 }
 
 export function drawBossLine() {
   const L = state.bossLine;
+  if (!L) return;
   const shown = Math.min(L.text.length, Math.floor((L.m - L.t) * 42));
   const typing = shown < L.text.length;
   const a = clamp(Math.min(L.t * 3, (L.m - L.t) * 6), 0, 1);

@@ -5,7 +5,7 @@
 import { state } from '../core/state.js';
 import { ctx } from '../core/canvas.js';
 import { clamp, lerp } from '../core/math.js';
-import { drawGlow, glowSprites, lowHpVignetteLayer } from './sprites.js';
+import { drawGlow, drawOverlay, glowSprites, lowHpVignetteLayer } from './sprites.js';
 import { H, W } from '../core/constants.js';
 /** Afterimages left by a phase dash. */
 export function drawDashGhosts() {
@@ -115,7 +115,7 @@ export function drawHitIndicators() {
 export function drawScreenFlashes() {
   if (state.player.hp <= 1 && state.player.dying <= 0) {
     ctx.globalAlpha = 0.45 + 0.3 * Math.sin(state.realTime * 5);
-    ctx.drawImage(lowHpVignetteLayer.c, 0, 0, W, H);
+    drawOverlay(lowHpVignetteLayer);
     ctx.globalAlpha = 1;
   }
   if (state.arrivalTimer > 0) {

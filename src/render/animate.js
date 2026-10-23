@@ -12,13 +12,18 @@ import { animateTitleSky } from './title.js';
 
 /** Advances purely cosmetic animation once per display frame (physics runs separately at a fixed rate). */
 export function updateVisuals(dt) {
+  if (state.scene === 'title') {
+    animateTitleSky(dt);
+    animateAmbience(dt);
+    return;
+  }
+  if (state.scene === 'pause') return; // a paused world stays perfectly still
   animateGate(dt);
   animateFlyingCoins(dt);
   animateHeartShards(dt);
   animateCorpsesAndBats(dt);
   spawnProjectileTrails(dt);
   animateBossAura(dt);
-  animateTitleSky(dt);
   animateAmbience(dt);
   animateEffects(dt);
   animatePickupsAndEnemies(dt);

@@ -43,12 +43,12 @@ export function updateRenderScale() {
   const cssWidth = stageEl?.getBoundingClientRect().width || W;
   const level = settings.gfx === 'auto' ? state.perfLevel : settings.gfx === 'perf' ? 2 : 0;
   const pixelRatio = Math.min(window.devicePixelRatio || 1, PIXEL_RATIO_CAP[level]);
-  const previous = state.renderScale;
   state.renderScale = Math.round(clamp((cssWidth * pixelRatio) / W, 0.5, 2.5) * 100) / 100;
-  if (canvas.width !== Math.round(W * state.renderScale)) {
+  const resized = canvas.width !== Math.round(W * state.renderScale);
+  if (resized) {
     canvas.width = Math.round(W * state.renderScale);
     canvas.height = Math.round(H * state.renderScale);
   }
   ctx.setTransform(state.renderScale, 0, 0, state.renderScale, 0, 0);
-  if (previous !== state.renderScale) for (const listener of scaleListeners) listener(state.renderScale);
+  if (resized) for (const listener of scaleListeners) listener(state.renderScale);
 }

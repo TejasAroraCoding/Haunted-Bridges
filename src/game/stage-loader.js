@@ -67,6 +67,12 @@ function resetStageState() {
   state.gateRumble = false;
   state.coinShown = 0;
   state.stageKills = 0;
+  // Transitions in progress belong to the previous stage (e.g. restarting mid-warp must not warp the new run).
+  state.warpTimer = 0;
+  state.hitStop = 0;
+  state.hurtFlash = 0;
+  state.lightningFlash = 0;
+  state.bannerTimer = 0;
 }
 
 function spawnLayout(layout, stageIndex) {

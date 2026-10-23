@@ -12,7 +12,7 @@ import { drawBoss } from './boss.js';
 import { drawEnemies } from './enemies.js';
 import { drawBats, drawCorpses } from './death-animations.js';
 import { drawPlayer } from './hero.js';
-import { drawGlow, glowSprites } from './sprites.js';
+import { blitAligned, drawGlow, drawMist } from './sprites.js';
 import { drawBloodMist, drawBombs, drawEnemyBullets, drawLasers, drawSpikeTraps, drawWalls } from './hazards.js';
 import { drawEntry, drawGate } from './gate.js';
 import { drawCoins, drawHearts, drawPowerUps } from './pickups.js';
@@ -27,48 +27,55 @@ import {
 } from './effects.js';
 import { drawDarkness, drawEmbers, drawVignette } from './lighting.js';
 
-/** Draws the whole playfield for one frame, back to front. */
-export function drawWorld() {
-  ctx.drawImage(state.floorLayer.c, 0, 0, W, H);
+/** Playfield layers, back to front. */
+const WORLD_LAYERS = [
+  drawFloorMist,
+  drawCandles,
+  drawBloodMist,
+  drawWalls,
+  drawSpikeTraps,
+  drawGate,
+  drawEntry,
+  drawCoins,
+  drawHearts,
+  drawPowerUps,
+  drawBombs,
+  drawCorpses,
+  drawEnemies,
+  drawBoss,
+  drawLasers,
+  drawEnemyBullets,
+  drawPlayerProjectiles,
+  drawDashGhosts,
+  drawHeroOnField,
+  drawShockwaves,
+  drawParticles,
+  drawBats,
+  drawSoulOrbs,
+  drawDarkness,
+  drawEmbers,
+  drawVignette,
+  drawHitIndicators,
+  drawScreenFlashes,
+];
 
-  drawFloorMist();
-  drawCandles();
-  drawBloodMist();
-  drawWalls();
-  drawSpikeTraps();
-  drawGate(state.coinsLeft <= 0 && state.stageIndex < 5);
-  drawEntry();
-  drawCoins();
-  drawHearts();
-  drawPowerUps();
-  drawBombs();
-  drawCorpses();
-  drawEnemies();
-  drawBoss();
-  drawLasers();
-  drawEnemyBullets();
-  drawPlayerProjectiles();
-  drawDashGhosts();
-  drawHeroOnField();
-  drawShockwaves();
-  drawParticles();
-  drawBats();
-  drawSoulOrbs();
-  drawDarkness();
-  drawEmbers();
-  drawVignette();
-  drawHitIndicators();
-  drawScreenFlashes();
+/**
+ * Draws the whole playfield for one frame. Each layer runs inside save/restore, so canvas state one
+ * layer sets (alpha, blend mode, line style, text alignment…) can never leak into the next.
+ */
+export function drawWorld() {
+  blitAligned(state.floorLayer.c, 0, 0, W, H); // floor is baked at render resolution
+  for (const drawLayer of WORLD_LAYERS) {
+    ctx.save();
+    drawLayer();
+    ctx.restore();
+  }
 }
 
 /** Drifting mist over the chasm lanes (under everything else). */
 function drawFloorMist() {
-  for (const f of fogBanks) {
-    const pa = ctx.globalAlpha;
-    ctx.globalAlpha = pa * f.a * (0.8 + 0.2 * Math.sin(f.p));
-    ctx.drawImage(glowSprites.white, f.x - f.w / 2, f.y - f.w * 0.18, f.w, f.w * 0.36);
-    ctx.globalAlpha = pa;
-  }
+  for (const f of fogBanks)
+    drawMist(f.x - f.w / 2, f.y - f.w * 0.18, f.w, f.w * 0.36, f.a * (0.8 + 0.2 * Math.sin(f.p)));
 }
 
 /** Flickering candles baked into the floor. */

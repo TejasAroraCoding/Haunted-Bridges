@@ -126,3 +126,25 @@ test('pause menu opens and resumes', async ({ page }) => {
   await page.getByRole('button', { name: /RESUME MISSION/ }).click();
   await expect.poll(() => game(page, () => window.__game.state.scene)).toBe('play');
 });
+
+test('starting a new run during the portal warp begins at stage 1', async ({ page }) => {
+  await startRun(page);
+  await game(page, () => {
+    const s = window.__game.state;
+    Object.assign(s, { coinsLeft: 0, gateLift: 1, warpTimer: 1.5 }); // mid-warp to stage 2
+  });
+  await page.keyboard.press('r'); // restart
+  await page.waitForTimeout(2500); // longer than the warp would have taken
+  expect(await game(page, () => window.__game.state.stageIndex)).toBe(0);
+});
+
+test('heroes are named Aric, Ronin, Bram and Phoenix', async ({ page }) => {
+  await page.getByRole('button', { name: /CHAMPIONS/ }).click();
+  const names = await page
+    .locator('#modal-heroes .hero-card .font-display.text-white, #modal-heroes .hero-card')
+    .allInnerTexts();
+  const text = names.join(' ');
+  for (const name of ['ARIC', 'RONIN', 'BRAM', 'PHOENIX']) expect(text.toUpperCase()).toContain(name);
+  expect(text.toUpperCase()).not.toContain('VESPER');
+  expect(text.toUpperCase()).not.toContain('LYRA');
+});

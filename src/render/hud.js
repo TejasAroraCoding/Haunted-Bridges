@@ -18,25 +18,37 @@ import { drawGlow } from './sprites.js';
 import { drawBanner, drawBossOverlays, drawStageCard, drawWarpTransition } from './overlays.js';
 
 /** Draws the heads-up display and full-screen overlays (not affected by camera shake). */
+/** Lowest edge of the top HUD panels; big floating labels stay below it. */
+const HUD_BOTTOM = 100;
+
+/** HUD layers, back to front. */
+const HUD_LAYERS = [
+  drawFloatingTexts,
+  drawObjectiveArrow,
+  drawStatusPanelFrame,
+  drawVitalityIcon,
+  drawHealthCells,
+  drawWeaponAndDash,
+  drawWarpRunTag,
+  drawStagePanel,
+  drawTelemetryPanel,
+  drawFlyingCoins,
+  drawComboMeter,
+  drawBossHealthBar,
+  drawBossOverlays,
+  drawBanner,
+  drawWarpTransition,
+  drawStageCard,
+  drawTouchSticks,
+  drawCrosshair,
+];
+
 export function drawHud() {
-  drawFloatingTexts();
-  drawObjectiveArrow();
-  drawStatusPanelFrame();
-  drawVitalityIcon();
-  drawHealthCells();
-  drawWeaponAndDash();
-  drawWarpRunTag();
-  drawStagePanel();
-  drawTelemetryPanel();
-  drawFlyingCoins();
-  drawComboMeter();
-  drawBossHealthBar();
-  drawBossOverlays();
-  drawBanner();
-  drawWarpTransition();
-  drawStageCard();
-  drawTouchSticks();
-  drawCrosshair();
+  for (const drawLayer of HUD_LAYERS) {
+    ctx.save();
+    drawLayer();
+    ctx.restore();
+  }
 }
 
 /** Damage numbers and pickup labels; big hits pop in with a gold outline. */
@@ -46,11 +58,14 @@ function drawFloatingTexts() {
     const age = f.m - f.t;
     ctx.globalAlpha = Math.min(1, (f.t / f.m) * 1.6);
     const pop = f.big ? 1 + Math.max(0, 0.22 - age) * 3.4 : 1 + Math.max(0, 0.08 - age) * 2.5;
-    ctx.save();
-    ctx.translate(f.x, f.y);
-    ctx.scale(pop, pop);
     ctx.font = `800 ${f.sz || 15}px ${F_DISPLAY}`;
     ctx.textAlign = 'center';
+    // Keep big labels fully on screen (e.g. "+1200 ABYSS SLAIN" near the right edge).
+    const half = (ctx.measureText(f.s).width * pop) / 2 + 8;
+    const x = half * 2 < W ? clamp(f.x, half, W - half) : W / 2;
+    ctx.save();
+    ctx.translate(x, Math.max(f.y, f.big ? HUD_BOTTOM + (f.sz || 15) : (f.sz || 15) + 4));
+    ctx.scale(pop, pop);
     ctx.lineJoin = 'round';
     if (f.big) {
       ctx.strokeStyle = '#2a1600';
@@ -368,27 +383,35 @@ function drawComboMeter() {
 
 /** Malakor's health bar with phase markers. */
 function drawBossHealthBar() {
-  if (state.boss && !state.boss.dead && state.bossIntro <= 0) {
-    const bw = 420,
-      bx = W / 2 - bw / 2,
-      by = 76;
-    ctx.fillStyle = 'rgba(10,4,18,0.92)';
-    ctx.strokeStyle = '#ff2a55';
-    ctx.lineWidth = 1.5;
-    ctx.fillRect(bx - 4, by - 4, bw + 8, 22);
-    ctx.strokeRect(bx - 4, by - 4, bw + 8, 22);
-    ctx.fillStyle = 'rgba(255,255,255,0.75)';
-    ctx.fillRect(bx, by, bw * Math.max(0, state.boss.dispHp / state.boss.max), 14);
-    ctx.fillStyle = state.boss.pl === 3 ? '#ff1e4d' : state.boss.pl === 2 ? '#e11d48' : '#9333ea';
-    ctx.fillRect(bx, by, bw * Math.max(0, state.boss.hp / state.boss.max), 14);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(bx + bw * 0.33, by, 2, 14);
-    ctx.fillRect(bx + bw * 0.66, by, 2, 14);
-    ctx.font = `700 11px ${F_DISPLAY}`;
-    ctx.fillStyle = '#ffe4e6';
-    ctx.textAlign = 'center';
-    ctx.fillText(`MALAKOR, LORD OF THE ABYSS — PHASE ${state.boss.pl} // ${state.boss.atkName}`, W / 2, by + 11);
+  const boss = state.boss;
+  if (!boss || boss.dead || state.bossIntro > 0) return;
+  const bw = 420;
+  const bx = W / 2 - bw / 2;
+  const by = 76;
+  ctx.fillStyle = 'rgba(10,4,18,0.92)';
+  ctx.strokeStyle = '#ff2a55';
+  ctx.lineWidth = 1.5;
+  ctx.fillRect(bx - 4, by - 4, bw + 8, 22);
+  ctx.strokeRect(bx - 4, by - 4, bw + 8, 22);
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  ctx.fillRect(bx, by, bw * Math.max(0, boss.dispHp / boss.max), 14);
+  ctx.fillStyle = boss.pl === 3 ? '#ff1e4d' : boss.pl === 2 ? '#e11d48' : '#9333ea';
+  ctx.fillRect(bx, by, bw * Math.max(0, boss.hp / boss.max), 14);
+  // Phase thresholds as notches on the frame, so they never cut through the label.
+  ctx.fillStyle = '#ffffff';
+  for (const f of [0.34, 0.67]) {
+    ctx.fillRect(bx + bw * f - 1, by - 4, 2, 4);
+    ctx.fillRect(bx + bw * f - 1, by + 14, 2, 4);
   }
+  ctx.font = `700 11px ${F_DISPLAY}`;
+  ctx.textAlign = 'center';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = 'rgba(20,4,14,0.85)';
+  const label = `MALAKOR, LORD OF THE ABYSS — PHASE ${boss.pl} // ${boss.atkName}`;
+  ctx.strokeText(label, W / 2, by + 11);
+  ctx.fillStyle = '#ffe4e6';
+  ctx.fillText(label, W / 2, by + 11);
 }
 
 /** Virtual joysticks on touch devices. */
@@ -411,8 +434,17 @@ function drawTouchSticks() {
 }
 
 /** Rotating crosshair; turns red over a target. */
+/** The crosshair only shows while the player is actually in control. */
+const crosshairVisible = () =>
+  state.scene === 'play' &&
+  state.stageCardTimer <= 0 &&
+  state.warpTimer <= 0 &&
+  state.bossIntro <= 0 &&
+  state.player.dying <= 0 &&
+  (!isTouchDevice || mouse.d);
+
 function drawCrosshair() {
-  if (!isTouchDevice || mouse.d) {
+  if (crosshairVisible()) {
     let overEnemy = false;
     for (const e of state.enemies)
       if (isDamageable(e) && dist(mouse.x, mouse.y, e.x, e.y) < 32) {

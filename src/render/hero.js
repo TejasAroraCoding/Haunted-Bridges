@@ -138,7 +138,7 @@ export function drawHeroModel(
   if (heroIdx === HERO.BRAM) {
     ctx.fillStyle = '#ffd966';
     ctx.fillRect(-1.5, -24, 3, 6);
-  } else if (heroIdx === HERO.LYRA) {
+  } else if (heroIdx === HERO.PHOENIX) {
     ctx.fillStyle = '#ffae33';
     ctx.beginPath();
     ctx.moveTo(-5, -21);
@@ -167,7 +167,7 @@ export function drawHeroModel(
   ctx.moveTo(0, 0);
   ctx.lineTo(8, 0);
   ctx.stroke();
-  if (heroIdx === HERO.VESPER) {
+  if (heroIdx === HERO.RONIN) {
     ctx.fillStyle = '#e066ff';
     ctx.beginPath();
     ctx.moveTo(8, -3);

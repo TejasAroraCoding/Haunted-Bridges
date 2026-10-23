@@ -53,8 +53,17 @@ export function applyShake() {
   if (!settings.shake) return;
   const t = state.realTime;
   const wobble = trauma * trauma * 12;
-  const ox = (Math.sin(t * 41) * 0.6 + Math.sin(t * 23 + 1.3) * 0.4) * wobble + kickX;
-  const oy = (Math.sin(t * 37 + 0.7) * 0.6 + Math.sin(t * 19 + 2.1) * 0.4) * wobble + kickY;
+  let ox = (Math.sin(t * 41) * 0.6 + Math.sin(t * 23 + 1.3) * 0.4) * wobble + kickX;
+  let oy = (Math.sin(t * 37 + 0.7) * 0.6 + Math.sin(t * 19 + 2.1) * 0.4) * wobble + kickY;
+  if (trauma < 0.01) {
+    // Kick only: snap to whole device pixels so the floor and sprites still copy 1:1 (no resampling).
+    const s = state.renderScale;
+    ox = Math.round(ox * s) / s;
+    oy = Math.round(oy * s) / s;
+    if (ox === 0 && oy === 0) return;
+    ctx.translate(ox, oy);
+    return;
+  }
   const rot = Math.sin(t * 29) * 0.016 * trauma * trauma;
   ctx.translate(W / 2 + ox, H / 2 + oy);
   ctx.rotate(rot);

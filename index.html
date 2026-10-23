@@ -66,30 +66,30 @@
 
         <div id="toast"></div>
         <div id="touch-layer" class="hidden">
-          <div id="zone-left" class="touch-zone absolute bottom-2 left-2 w-44 h-44"></div>
-          <div id="zone-right" class="touch-zone absolute bottom-2 right-2 w-44 h-44"></div>
+          <div id="zone-left" class="touch-zone absolute bottom-2 left-2 w-44 h-44 sm:w-52 sm:h-52"></div>
+          <div id="zone-right" class="touch-zone absolute bottom-2 right-2 w-44 h-44 sm:w-52 sm:h-52"></div>
           <button
             id="btn-touch-dash"
-            class="touch-zone font-display absolute bottom-36 right-6 w-16 h-16 rounded-full border-2 border-cyan-400/90 bg-cyan-950/80 text-cyan-200 font-bold text-xs shadow-lg shadow-cyan-500/40 flex flex-col items-center justify-center active:scale-90 transition-transform"
+            class="touch-zone font-display absolute bottom-36 right-6 sm:bottom-44 sm:right-8 w-16 h-16 rounded-full border-2 border-cyan-400/90 bg-cyan-950/80 text-cyan-200 font-bold text-xs shadow-lg shadow-cyan-500/40 flex flex-col items-center justify-center active:scale-90 transition-transform"
           >
             <span class="text-base leading-none">⚡</span>
             <span class="text-[10px] tracking-wider mt-0.5">DASH</span>
           </button>
         </div>
 
-        <div id="ui-root" class="ui-layer items-center justify-center p-2">
+        <div id="ui-root" class="ui-layer items-center justify-center p-2 sm:p-4">
           <!-- MAIN HUB -->
           <div
             id="menu-main"
-            class="interactive w-full max-w-4xl flex flex-col items-center justify-between h-full py-2"
+            class="interactive w-full max-w-4xl flex flex-col items-center justify-between h-full py-2 sm:py-5"
           >
             <div class="w-full flex items-center justify-between px-2">
-              <div class="neo-panel px-3.5 py-1.5 rounded-lg flex items-center gap-2 text-xs">
+              <div class="neo-panel px-3.5 py-1.5 rounded-lg flex items-center gap-2 text-xs sm:text-sm">
                 <span class="text-cyan-400 font-display font-bold">BEST RUN:</span>
                 <span id="ui-highscore" class="font-mono-tech font-bold text-amber-400" data-action="cheatTap">0</span>
               </div>
               <div
-                class="neo-panel px-3.5 py-1.5 rounded-lg text-xs text-slate-300 hidden items-center gap-2 font-mono-tech"
+                class="hub-build neo-panel px-3.5 py-1.5 rounded-lg text-xs text-slate-300 hidden sm:flex items-center gap-2 font-mono-tech"
               >
                 <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
                 <span>BUILD 4.0 // ROGUELITE COMBAT ENGINE</span>
@@ -98,16 +98,16 @@
 
             <div class="flex flex-col items-center text-center my-auto px-2">
               <div
-                class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-[11px] uppercase tracking-[0.28em] text-cyan-300 font-display font-bold mb-1.5"
+                class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-[11px] sm:text-xs uppercase tracking-[0.28em] text-cyan-300 font-display font-bold mb-1.5"
               >
                 <span>TACTICAL ARCANE SURVIVAL</span>
               </div>
               <h1
-                class="font-display text-4xl font-bold italic tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-400 drop-shadow-[0_4px_28px_rgba(0,240,255,0.4)]"
+                class="font-display text-4xl sm:text-6xl md:text-7xl font-bold italic tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-white to-purple-400 drop-shadow-[0_4px_28px_rgba(0,240,255,0.4)]"
               >
                 HAUNTED BRIDGES
               </h1>
-              <p class="hub-tagline text-xs text-slate-300 max-w-lg mt-1 mb-2 font-medium tracking-wide">
+              <p class="hub-tagline text-xs sm:text-base text-slate-300 max-w-lg mt-1 mb-2 font-medium tracking-wide">
                 Breach six cursed spans, evolve your arcane weaponry, and shatter the Abyssal Lord.
               </p>
               <div class="obj-strip">
@@ -119,12 +119,12 @@
                 id="hero-card-hub"
                 data-action="openModal"
                 data-arg="modal-heroes"
-                class="neo-panel rounded-xl p-2.5 mb-3.5 flex items-center gap-3.5 cursor-pointer hover:border-cyan-400 transition-all group"
+                class="neo-panel rounded-xl p-2.5 sm:p-3.5 mb-3.5 sm:mb-5 flex items-center gap-3.5 sm:gap-4 cursor-pointer hover:border-cyan-400 transition-all group"
               >
                 <div
-                  class="relative w-14 h-14 rounded-lg bg-slate-950 border border-cyan-500/40 flex items-center justify-center overflow-hidden shadow-inner"
+                  class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-slate-950 border border-cyan-500/40 flex items-center justify-center overflow-hidden shadow-inner"
                 >
-                  <canvas id="hero-mini-preview" width="72" height="72" class="w-14 h-14"></canvas>
+                  <canvas id="hero-mini-preview" width="72" height="72" class="w-14 h-14 sm:w-16 sm:h-16"></canvas>
                 </div>
                 <div class="text-left pr-2">
                   <div class="flex items-center gap-2">
@@ -136,10 +136,10 @@
                       >SWITCH HERO ▸</span
                     >
                   </div>
-                  <div id="mini-hero-name" class="font-display text-base font-bold text-white mt-0.5">
+                  <div id="mini-hero-name" class="font-display text-base sm:text-lg font-bold text-white mt-0.5">
                     ARIC // ARCANE WARDEN
                   </div>
-                  <div id="mini-hero-desc" class="text-xs text-slate-300">
+                  <div id="mini-hero-desc" class="text-xs sm:text-sm text-slate-300">
                     Balanced Azure Battlemage · Rapid Arcane Bolts
                   </div>
                 </div>
@@ -176,31 +176,31 @@
                 </button>
               </div>
               <div id="diff-desc" class="diff-desc"></div>
-              <div class="flex flex-wrap items-center justify-center gap-2.5">
+              <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
                 <button
                   data-action="startNewGameUI"
-                  class="btn-neo btn-neo-cta px-7 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2"
+                  class="btn-neo btn-neo-cta px-7 sm:px-9 py-2.5 sm:py-3.5 rounded-xl font-bold text-sm sm:text-lg flex items-center gap-2"
                 >
                   <span>⚡</span><span>DEPLOY INTO BRIDGE</span>
                 </button>
                 <button
                   data-action="openModal"
                   data-arg="modal-heroes"
-                  class="btn-neo px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5"
+                  class="btn-neo px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5"
                 >
                   <span>⚔</span><span>CHAMPIONS</span>
                 </button>
                 <button
                   data-action="openModal"
                   data-arg="modal-controls"
-                  class="btn-neo px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5"
+                  class="btn-neo px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5"
                 >
                   <span>🎮</span><span>CONTROLS</span>
                 </button>
                 <button
                   data-action="openModal"
                   data-arg="modal-settings"
-                  class="btn-neo px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5"
+                  class="btn-neo px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-1.5"
                 >
                   <span>⚙</span><span>SETTINGS</span>
                 </button>
@@ -215,7 +215,7 @@
               </div>
             </div>
 
-            <div class="hub-hint font-mono-tech text-[11px] text-slate-400 text-center px-3">
+            <div class="hub-hint font-mono-tech text-[11px] sm:text-xs text-slate-400 text-center px-3">
               [PC] <span class="text-cyan-300">WASD/Arrows</span> Move ·
               <span class="text-cyan-300">Click/Space</span> Fire ·
               <span class="text-amber-300">Shift/R-Click</span> Phase Dash &nbsp;//&nbsp; [MOBILE]
@@ -226,29 +226,36 @@
           <!-- HEROES -->
           <div
             id="modal-heroes"
-            class="interactive neo-panel rounded-2xl w-full max-w-4xl max-h-[92%] p-3.5 hidden flex-col justify-between overflow-hidden"
+            class="interactive neo-panel rounded-2xl w-full max-w-4xl max-h-[92%] p-3.5 sm:p-6 hidden flex-col justify-between overflow-hidden"
           >
-            <div class="flex items-center justify-between border-b border-cyan-500/25 pb-2.5 mb-2">
+            <div class="flex items-center justify-between border-b border-cyan-500/25 pb-2.5 sm:pb-3 mb-2 sm:mb-4">
               <div>
-                <h2 class="font-display text-lg font-bold text-cyan-300 tracking-wider">SELECT YOUR OPERATIVE</h2>
-                <p class="text-xs text-slate-300">
+                <h2 class="font-display text-lg sm:text-2xl font-bold text-cyan-300 tracking-wider">
+                  SELECT YOUR OPERATIVE
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-300">
                   Each champion features custom weaponry, dash agility, and passive combat perks.
                 </p>
               </div>
-              <button data-action="closeModals" class="btn-neo px-3 py-1 rounded-lg text-xs font-bold">✕ ESC</button>
+              <button data-action="closeModals" class="btn-neo px-3 py-1 rounded-lg text-xs sm:text-sm font-bold">
+                ✕ ESC
+              </button>
             </div>
-            <div id="hero-grid" class="grid grid-cols-1 gap-2.5 overflow-y-auto custom-scroll pr-1 my-1"></div>
-            <div class="flex items-center justify-between border-t border-cyan-500/25 pt-2.5 mt-2">
+            <div
+              id="hero-grid"
+              class="hero-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 overflow-y-auto custom-scroll pr-1 my-1"
+            ></div>
+            <div class="flex items-center justify-between border-t border-cyan-500/25 pt-2.5 sm:pt-3 mt-2">
               <div id="selected-hero-perk" class="font-mono-tech text-xs text-amber-300 truncate pr-2">
                 PERK // Balanced Arcane Staff & Adaptive Multi-Shot
               </div>
               <div class="flex gap-2 shrink-0">
-                <button data-action="closeModals" class="btn-neo px-4 py-2 rounded-xl text-xs font-bold">
+                <button data-action="closeModals" class="btn-neo px-4 py-2 rounded-xl text-xs sm:text-sm font-bold">
                   CONFIRM
                 </button>
                 <button
                   data-action="deployFromHeroes"
-                  class="btn-neo btn-neo-cta px-5 py-2 rounded-xl text-xs font-bold"
+                  class="btn-neo btn-neo-cta px-5 py-2 rounded-xl text-xs sm:text-sm font-bold"
                 >
                   ⚡ DEPLOY NOW
                 </button>
@@ -259,16 +266,22 @@
           <!-- CONTROLS -->
           <div
             id="modal-controls"
-            class="interactive neo-panel rounded-2xl w-full max-w-3xl max-h-[92%] p-3.5 hidden flex-col justify-between overflow-hidden"
+            class="interactive neo-panel rounded-2xl w-full max-w-3xl max-h-[92%] p-3.5 sm:p-6 hidden flex-col justify-between overflow-hidden"
           >
-            <div class="flex items-center justify-between border-b border-cyan-500/25 pb-2.5 mb-3">
+            <div class="flex items-center justify-between border-b border-cyan-500/25 pb-2.5 sm:pb-3 mb-3">
               <div>
-                <h2 class="font-display text-lg font-bold text-cyan-300">TACTICAL CONTROLS & COMBAT CODEX</h2>
-                <p class="text-xs text-slate-300">Master enemy health, phase dashing, and combo multipliers.</p>
+                <h2 class="font-display text-lg sm:text-2xl font-bold text-cyan-300">
+                  TACTICAL CONTROLS & COMBAT CODEX
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-300">
+                  Master enemy health, phase dashing, and combo multipliers.
+                </p>
               </div>
-              <button data-action="closeModals" class="btn-neo px-3 py-1 rounded-lg text-xs font-bold">✕ ESC</button>
+              <button data-action="closeModals" class="btn-neo px-3 py-1 rounded-lg text-xs sm:text-sm font-bold">
+                ✕ ESC
+              </button>
             </div>
-            <div class="grid grid-cols-1 gap-3 overflow-y-auto custom-scroll pr-1 text-xs">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 overflow-y-auto custom-scroll pr-1 text-xs sm:text-sm">
               <div class="bg-slate-950/80 border border-cyan-500/30 rounded-xl p-3.5">
                 <div class="font-display text-cyan-300 font-bold mb-2">💻 DESKTOP / KEYBOARD + MOUSE</div>
                 <ul class="space-y-1.5 text-slate-200">
@@ -319,7 +332,10 @@
                   </li>
                 </ul>
               </div>
-              <div class="bg-slate-950/80 border rounded-xl p-3.5" style="border-color: rgba(251, 191, 36, 0.4)">
+              <div
+                class="bg-slate-950/80 border rounded-xl p-3.5 md:col-span-2"
+                style="border-color: rgba(251, 191, 36, 0.4)"
+              >
                 <div class="font-display text-amber-300 font-bold mb-1.5">◆ MISSION OBJECTIVE</div>
                 <div class="text-xs text-slate-300">
                   <strong class="text-amber-300">Stages 1–5:</strong> collect
@@ -331,9 +347,9 @@
                   your combo, and kills &amp; coins level up your weapon.
                 </div>
               </div>
-              <div class="bg-slate-950/80 border border-purple-500/30 rounded-xl p-3.5">
+              <div class="bg-slate-950/80 border border-purple-500/30 rounded-xl p-3.5 md:col-span-2">
                 <div class="font-display text-amber-300 font-bold mb-1.5">⚡ ENEMIES, TELEGRAPHS & RELICS</div>
-                <div class="grid grid-cols-1 gap-3 text-xs text-slate-300">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-300">
                   <div>
                     <strong class="text-emerald-300 font-display block">ENEMY HP & CASTS</strong>Every enemy — including
                     Phantom ghosts — shows a segmented health bar and can be banished. Wizards show a cyan
@@ -354,7 +370,10 @@
               </div>
             </div>
             <div class="flex justify-end border-t border-cyan-500/25 pt-3 mt-3">
-              <button data-action="closeModals" class="btn-neo btn-neo-cta px-6 py-2 rounded-xl text-xs font-bold">
+              <button
+                data-action="closeModals"
+                class="btn-neo btn-neo-cta px-6 py-2 rounded-xl text-xs sm:text-sm font-bold"
+              >
                 UNDERSTOOD
               </button>
             </div>
@@ -363,13 +382,15 @@
           <!-- SETTINGS -->
           <div
             id="modal-settings"
-            class="interactive neo-panel rounded-2xl w-full max-w-lg max-h-[92%] p-4 hidden flex-col justify-between overflow-y-auto custom-scroll"
+            class="interactive neo-panel rounded-2xl w-full max-w-lg max-h-[92%] p-4 sm:p-6 hidden flex-col justify-between overflow-y-auto custom-scroll"
           >
             <div class="flex items-center justify-between border-b border-cyan-500/25 pb-3 mb-4">
-              <h2 class="font-display text-lg font-bold text-cyan-300">SYSTEM SETTINGS</h2>
-              <button data-action="closeModals" class="btn-neo px-3 py-1 rounded-lg text-xs font-bold">✕ ESC</button>
+              <h2 class="font-display text-lg sm:text-2xl font-bold text-cyan-300">SYSTEM SETTINGS</h2>
+              <button data-action="closeModals" class="btn-neo px-3 py-1 rounded-lg text-xs sm:text-sm font-bold">
+                ✕ ESC
+              </button>
             </div>
-            <div class="space-y-3 text-xs text-slate-200">
+            <div class="space-y-3 text-xs sm:text-sm text-slate-200">
               <div class="flex items-center justify-between bg-slate-950/70 p-3 rounded-xl border border-slate-800">
                 <div>
                   <div class="font-display font-bold text-white">Difficulty</div>
@@ -468,7 +489,10 @@
               </div>
             </div>
             <div class="flex justify-end border-t border-cyan-500/25 pt-4 mt-4">
-              <button data-action="closeModals" class="btn-neo btn-neo-cta px-6 py-2 rounded-xl text-xs font-bold">
+              <button
+                data-action="closeModals"
+                class="btn-neo btn-neo-cta px-6 py-2 rounded-xl text-xs sm:text-sm font-bold"
+              >
                 SAVE & CLOSE
               </button>
             </div>
@@ -512,13 +536,13 @@
           <!-- PAUSE -->
           <div
             id="modal-status"
-            class="interactive neo-panel rounded-2xl w-full max-w-md p-5 hidden flex-col items-center text-center"
+            class="interactive neo-panel rounded-2xl w-full max-w-md p-5 sm:p-6 hidden flex-col items-center text-center"
           >
             <div class="font-mono-tech text-xs uppercase tracking-[0.25em] text-cyan-400 font-bold mb-1">
               EXPEDITION PAUSED
             </div>
-            <h2 class="font-display text-3xl font-bold text-amber-300 mb-2">PAUSED</h2>
-            <p id="status-desc" class="text-xs text-slate-300 mb-4">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold text-amber-300 mb-2">PAUSED</h2>
+            <p id="status-desc" class="text-xs sm:text-sm text-slate-300 mb-4">
               Recalibrate your loadout before crossing the next span.
             </p>
             <div
@@ -526,44 +550,50 @@
             >
               <div>
                 <div class="text-slate-400 font-display">SCORE</div>
-                <div id="stat-score" class="font-mono-tech text-base font-bold text-amber-300">0</div>
+                <div id="stat-score" class="font-mono-tech text-base sm:text-lg font-bold text-amber-300">0</div>
               </div>
               <div>
                 <div class="text-slate-400 font-display">SECTOR</div>
-                <div id="stat-stage" class="font-mono-tech text-base font-bold text-cyan-300">1 / 6</div>
+                <div id="stat-stage" class="font-mono-tech text-base sm:text-lg font-bold text-cyan-300">1 / 6</div>
               </div>
               <div>
                 <div class="text-slate-400 font-display">MAX COMBO</div>
-                <div id="stat-combo" class="font-mono-tech text-base font-bold text-purple-300">x1.0</div>
+                <div id="stat-combo" class="font-mono-tech text-base sm:text-lg font-bold text-purple-300">x1.0</div>
               </div>
             </div>
             <div class="w-full flex flex-col gap-2.5">
-              <button data-action="resumeGameUI" class="btn-neo btn-neo-cta w-full py-2.5 rounded-xl font-bold text-sm">
+              <button
+                data-action="resumeGameUI"
+                class="btn-neo btn-neo-cta w-full py-2.5 rounded-xl font-bold text-sm sm:text-base"
+              >
                 ▶ RESUME MISSION
               </button>
-              <button data-action="startNewGameUI" class="btn-neo w-full py-2.5 rounded-xl font-bold text-xs">
+              <button
+                data-action="startNewGameUI"
+                class="btn-neo w-full py-2.5 rounded-xl font-bold text-xs sm:text-sm"
+              >
                 ↻ NEW RUN FROM STAGE 1
               </button>
               <div class="grid grid-cols-2 gap-2">
                 <button
                   data-action="returnToTitleUI"
                   data-arg="modal-heroes"
-                  class="btn-neo py-2 rounded-xl font-bold text-xs"
+                  class="btn-neo py-2 rounded-xl font-bold text-xs sm:text-sm"
                 >
                   ⚔ Switch Hero
                 </button>
                 <button
                   data-action="openModalFromPause"
                   data-arg="modal-settings"
-                  class="btn-neo py-2 rounded-xl font-bold text-xs"
+                  class="btn-neo py-2 rounded-xl font-bold text-xs sm:text-sm"
                 >
                   ⚙ Settings
                 </button>
               </div>
               <div class="pause-tools">
-                <button data-action="toggleMuteUI" class="btn-neo py-2 rounded-xl font-bold text-xs">
+                <button data-action="toggleMuteUI" class="btn-neo py-2 rounded-xl font-bold text-xs sm:text-sm">
                   🔊 Sound On/Off</button
-                ><button data-action="toggleFullscreen" class="btn-neo py-2 rounded-xl font-bold text-xs">
+                ><button data-action="toggleFullscreen" class="btn-neo py-2 rounded-xl font-bold text-xs sm:text-sm">
                   ⛶ Fullscreen
                 </button>
               </div>

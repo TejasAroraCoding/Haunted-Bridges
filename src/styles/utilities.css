@@ -1,7 +1,8 @@
 /*
  * Utility classes used by the markup (a small, hand-maintained subset of Tailwind-style names).
- * Only the classes the game actually uses are defined here; there are no responsive variants —
- * small screens are handled by src/styles/layout.css and the JS stage/menu fitting in src/ui/layout.js.
+ * Only the classes the game actually uses are defined here, plus `sm:` / `md:` / `lg:` variants for
+ * larger screens. Short phone screens are additionally handled by src/styles/layout.css and the JS
+ * stage/menu fitting in src/ui/layout.js.
  */
 *,
 *::before,
@@ -574,6 +575,131 @@
   margin-top: auto;
   margin-bottom: auto;
 }
+/* Responsive variants (sm ≥ 640px, md ≥ 768px, lg ≥ 1024px) for larger screens */
+@media (min-width: 640px) {
+  .sm\:bottom-44 {
+    bottom: 11rem;
+  }
+  .sm\:flex {
+    display: flex;
+  }
+  .sm\:gap-3 {
+    gap: 0.75rem;
+  }
+  .sm\:gap-3\.5 {
+    gap: 0.875rem;
+  }
+  .sm\:gap-4 {
+    gap: 1rem;
+  }
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sm\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .sm\:h-16 {
+    height: 4rem;
+  }
+  .sm\:h-52 {
+    height: 13rem;
+  }
+  .sm\:mb-4 {
+    margin-bottom: 1rem;
+  }
+  .sm\:mb-5 {
+    margin-bottom: 1.25rem;
+  }
+  .sm\:p-3\.5 {
+    padding: 0.875rem;
+  }
+  .sm\:p-4 {
+    padding: 1rem;
+  }
+  .sm\:p-6 {
+    padding: 1.5rem;
+  }
+  .sm\:pb-3 {
+    padding-bottom: 0.75rem;
+  }
+  .sm\:pt-3 {
+    padding-top: 0.75rem;
+  }
+  .sm\:px-5 {
+    padding-inline: 1.25rem;
+  }
+  .sm\:px-9 {
+    padding-inline: 2.25rem;
+  }
+  .sm\:py-3\.5 {
+    padding-block: 0.875rem;
+  }
+  .sm\:py-5 {
+    padding-block: 1.25rem;
+  }
+  .sm\:right-8 {
+    right: 2rem;
+  }
+  .sm\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  .sm\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+  .sm\:text-6xl {
+    font-size: 3.75rem;
+    line-height: 1;
+  }
+  .sm\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+  .sm\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+  .sm\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  .sm\:text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  .sm\:w-16 {
+    width: 4rem;
+  }
+  .sm\:w-52 {
+    width: 13rem;
+  }
+}
+@media (min-width: 768px) {
+  .md\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .md\:text-7xl {
+    font-size: 4.5rem;
+    line-height: 1;
+  }
+}
+@media (min-width: 1024px) {
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* `hidden sm:flex` = hidden on small screens, flex from 640px (needs to beat `.hidden` below) */
+@media (min-width: 640px) {
+  .hidden.sm\:flex {
+    display: flex;
+  }
+}
+
 /* must stay last so it overrides display utilities */
 .hidden {
   display: none;

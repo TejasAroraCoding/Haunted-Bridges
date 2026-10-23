@@ -21,6 +21,7 @@ body.compact #menu-main h1 {
   font-size: 42px;
   line-height: 1.05;
 }
+body.compact .hub-build,
 body.compact .hub-hint,
 body.compact #diff-desc,
 body.compact .hub-tagline {
@@ -185,4 +186,10 @@ body.cheats .warp-row {
 }
 #top-quick-bar {
   z-index: 40;
+}
+
+/* Short landscape screens: all four champions side by side instead of a scrolling 2×2 grid */
+body.compact .hero-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
 }

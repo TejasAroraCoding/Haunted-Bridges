@@ -58,7 +58,8 @@ src/
   styles/                 CSS split by area
   debug/test-hooks.js     Only included in `--mode test` builds (used by the Playwright tests)
 tests/                    Playwright smoke tests
-docs/ARCHITECTURE.md      How the pieces fit together, and how to add content
+docs/ARCHITECTURE.md      How the pieces fit together, rendering performance rules, how to add content
+CHANGELOG.md              Release notes
 ```
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the main loop, state model and how-tos (new stage, enemy, hero).

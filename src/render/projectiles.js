@@ -16,7 +16,7 @@ function fillCircle(x, y, r, color) {
   ctx.fill();
 }
 
-/** Lyra: a flickering fireball with a fading tail. */
+/** Phoenix: a flickering fireball with a fading tail. */
 function drawFireball(b, ux, uy) {
   const flicker = 0.85 + Math.sin(state.realTime * 40 + b.rot) * 0.1 + Math.random() * 0.08;
   drawGlow(b.x, b.y, 26 * flicker, 'orange', 0.8);
@@ -63,7 +63,7 @@ function drawSpear(b, ux, uy, angle) {
   ctx.restore();
 }
 
-/** Vesper: a spinning three-pronged shadow blade with two afterimages. */
+/** Ronin: a spinning three-pronged shadow blade with two afterimages. */
 function drawBlade(b, ux, uy) {
   const spin = b.age * 26 + b.rot;
   drawGlow(b.x, b.y, 18, 'purple', 0.6);

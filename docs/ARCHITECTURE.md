@@ -70,6 +70,24 @@ Heroes are data in `src/config/heroes.js`: stats, colours and weapon fields (`we
 
 `core/storage.js` wraps `localStorage` (keys in `STORAGE_KEYS`): best score, graphics setting, adaptive quality level and difficulty.
 
+## Rendering performance
+
+Most frame time on phones goes to filling pixels, so the renderer follows a few rules (measured with
+the CPU throttled 4×, these made frames 2–3× cheaper):
+
+- **Copy, don't resample.** Drawing an image at a different size is several times slower than copying it
+  pixel-for-pixel. Glows, light stamps, fog and clouds are rendered once at the exact on-screen size and
+  cached (`render/sprites.js`, 48 MB LRU budget, cleared when the resolution changes); full-screen
+  overlays (vignettes) are rebuilt at canvas resolution. Use `drawGlow`, `drawMist`, `drawImageExact`
+  and `drawOverlay` rather than `ctx.drawImage` with a size.
+- **Bake what doesn't move.** The stage floor and the title screen's sky, moon and bridge are pre-rendered
+  layers (`render/floor.js`, `render/title.js`).
+- **Don't fill hidden pixels.** Title ridges stop just below the ridge in front of them.
+- **Soft masks don't need smoothing.** The half-resolution darkness layer is stretched without image
+  smoothing, which is visually identical for a soft gradient and much cheaper.
+- **Isolate layers.** `drawWorld`, `drawHud` and `drawTitle` run each layer inside `ctx.save()/restore()`,
+  so no layer's canvas state (alpha, blend mode, line style, text alignment) can leak into the next.
+
 ## Testing
 
 `npm test` builds with `--mode test`, which also bundles `src/debug/test-hooks.js` and exposes `window.__game` (state plus a few functions) so Playwright can drive the game directly. Production builds never include it.

@@ -3,7 +3,7 @@
  */
 
 /** Hero indices, for the few places that need hero-specific art or behaviour. */
-export const HERO = { ARIC: 0, VESPER: 1, BRAM: 2, LYRA: 3 };
+export const HERO = { ARIC: 0, RONIN: 1, BRAM: 2, PHOENIX: 3 };
 
 /*
  * Weapon fields:
@@ -54,7 +54,7 @@ export const HEROES = [
   },
   {
     id: 1,
-    name: 'Vesper',
+    name: 'Ronin',
     title: 'Shadow Hunter',
     desc: 'Swift Phantom Rogue · Twin Shadow Blades',
     perk: 'Agile 265 Speed · 0.72s Dash Cooldown · Twin Shots',
@@ -124,7 +124,7 @@ export const HEROES = [
   },
   {
     id: 3,
-    name: 'Lyra',
+    name: 'Phoenix',
     title: 'Pyromancer',
     desc: 'Ember Sovereign · Explosive Fireball Orbs',
     perk: 'Fireballs detonate on impact into AoE Ember Blasts',

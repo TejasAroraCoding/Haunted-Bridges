@@ -5,6 +5,7 @@
 
 import { state } from '../core/state.js';
 import { HEROES } from '../config/heroes.js';
+import { STAGE_LAYOUTS } from '../config/stage-layouts.js';
 import { H, W } from '../core/constants.js';
 import { compact } from '../core/math.js';
 import { stepBossIntro, updateBoss } from './boss.js';
@@ -51,7 +52,7 @@ function stepInterruptions(dt) {
     p.y += (H / 2 - p.y) * Math.min(1, dt * 8);
     if (state.warpTimer <= 0) {
       state.warpTimer = 0;
-      loadStage(state.stageIndex + 1);
+      loadStage(Math.min(state.stageIndex + 1, STAGE_LAYOUTS.length - 1));
     }
     return true;
   }
